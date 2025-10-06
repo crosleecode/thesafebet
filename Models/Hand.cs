@@ -9,7 +9,7 @@ public class Hand
     {
         int sum = Cards.Sum(c => c.Value);
         int aces = Cards.Count(c => c.Rank == Rank.Ace);
-        while (sum > 21 && aces-- > 0) sum -= 10; // Ace 11->1
+        while (sum > 21 && aces-- > 0) sum -= 10;
         return sum;
     }
     public bool IsBlackjack() => Cards.Count == 2 && Total() == 21;
