@@ -91,3 +91,4 @@ C:\Users\Tommy\Downloads\thesafebet-main\obj\Debug\net8.0\refint\SafeBet.dll
 C:\Users\Tommy\Downloads\thesafebet-main\obj\Debug\net8.0\SafeBet.pdb
 C:\Users\Tommy\Downloads\thesafebet-main\obj\Debug\net8.0\SafeBet.genruntimeconfig.cache
 C:\Users\Tommy\Downloads\thesafebet-main\obj\Debug\net8.0\ref\SafeBet.dll
+C:\Users\Tommy\Downloads\thesafebet-main\obj\Debug\net8.0\SafeBet.sourcelink.json

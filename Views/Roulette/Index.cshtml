@@ -1,898 +1,546 @@
+@model SafeBet.Models.RouletteViewModel
 @{
     ViewData["Title"] = "Roulette";
 }
 
-<div class="roulette-container">
-    <!-- Header -->
-    <div class="roulette-header">
-        <div class="hamburger-menu">☰</div>
-        <h1 class="roulette-title">Roulette</h1>
-        <div class="header-controls">
-            <label class="odds-toggle">
-                <input type="checkbox" id="revealOdds"> Reveal Odds?
-            </label>
-            <div class="user-icon">👤</div>
-        </div>
-    </div>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-4">Roulette</h1>
+            
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-@(TempData["MessageType"]) alert-dismissible fade show" role="alert">
+                    @TempData["Message"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
 
-    <!-- Game Result Display -->
-    <div id="gameResult" class="game-result">You won/lost $ x!</div>
-
-    <div class="roulette-main">
-        <!-- Roulette Wheel -->
-        <div class="roulette-wheel-container">
-            <div class="roulette-wheel" id="rouletteWheel">
-                <div class="wheel-center">
-                    <div class="wheel-numbers">
-                        <!-- 0 and 00 -->
-                        <div class="wheel-number green" data-number="0">0</div>
-                        <div class="wheel-number green" data-number="00">00</div>
-                        
-                        <!-- Red numbers -->
-                        @foreach (int n in new[]{1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36})
-                        {
-                            <div class="wheel-number red" data-number="@n">@n</div>
-                        }
-                        
-                        <!-- Black numbers -->
-                        @foreach (int n in new[]{2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35})
-                        {
-                            <div class="wheel-number black" data-number="@n">@n</div>
-                        }
+            <!-- Game Status -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Game Status</h5>
+                            @if (Model.Game.LastResult.HasValue)
+                            {
+                                <p class="card-text">
+                                    <strong>Last Result:</strong> @Model.Game.LastResult (@Model.Game.LastColor)<br>
+                                    <strong>Total Winnings:</strong> 
+                                    <span class="@(Model.Game.TotalWinnings > 0 ? "text-success" : Model.Game.TotalWinnings < 0 ? "text-danger" : "text-muted")">
+                                        $@Model.Game.TotalWinnings
+                                    </span>
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="card-text">No games played yet.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Current Bets</h5>
+                            @if (Model.Game.CurrentBets.Any())
+                            {
+                                <p class="card-text">
+                                    <strong>Total Bet:</strong> $@Model.Game.GetTotalBetAmount()<br>
+                                    <strong>Bets:</strong>
+                                    @foreach (var bet in Model.Game.CurrentBets)
+                                    {
+                                        <span class="badge bg-primary me-1">@bet.BetType: $@bet.Amount</span>
+                                    }
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="card-text">No bets placed.</p>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Betting Table -->
-        <div class="betting-table">
-            <!-- Dozens Bets -->
-            <div class="dozens-row">
-                <div class="bet-cell dozens" data-bet="1st12" data-odds="2:1" data-payout="2">1st 12</div>
-                <div class="bet-cell dozens" data-bet="2nd12" data-odds="2:1" data-payout="2">2nd 12</div>
-                <div class="bet-cell dozens" data-bet="3rd12" data-odds="2:1" data-payout="2">3rd 12</div>
-            </div>
-
-            <!-- Main Number Grid -->
-            <div class="numbers-grid">
-                <!-- Zero column -->
-                <div class="zero-column">
-                    <div class="bet-cell green" data-bet="0" data-odds="35:1" data-payout="35">0</div>
-                    <div class="bet-cell green" data-bet="00" data-odds="35:1" data-payout="35">00</div>
-                </div>
-
-                <!-- Main numbers 1-36 -->
-                <div class="main-numbers">
-                    @for (int row = 0; row < 12; row++)
-                    {
-                        <div class="number-row">
-                            @for (int col = 0; col < 3; col++)
-                            {
-                                int number = (row * 3) + col + 1;
-                                bool isRed = new[]{1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36}.Contains(number);
-                                string color = isRed ? "red" : "black";
-                                <div class="bet-cell @color" data-bet="@number" data-odds="35:1" data-payout="35">@number</div>
-                            }
+                            <!-- Betting Controls -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title text-dark">Place Bet</h6>
+                            <form asp-action="PlaceBet" method="post" class="mb-3">
+                                <div class="input-group">
+                                    <input type="number" name="betAmount" value="@Model.BetAmount" min="1" class="form-control" placeholder="Bet Amount" required>
+                                    <input type="hidden" name="betType" id="selectedBetType" value="" required>
+                                    <button type="submit" class="btn btn-primary" onclick="return validateBet()">Place Bet</button>
+                                </div>
+                                <small class="text-muted">Select a betting area first, then enter amount</small>
+                            </form>
                         </div>
-                    }
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <form asp-action="Spin" method="post" class="mb-3">
+                        <button type="submit" class="btn btn-success btn-lg w-100">SPIN</button>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex gap-2">
+                        <form asp-action="ClearBets" method="post" class="mb-3">
+                            <button type="submit" class="btn btn-warning">Clear Bets</button>
+                        </form>
+                        <form asp-action="ToggleOdds" method="post" class="mb-3">
+                            <button type="submit" class="btn btn-info">
+                                @(Model.Game.ShowOdds ? "Hide" : "Show") Odds
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Roulette Wheel -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Roulette Wheel</h5>
+                            <div class="roulette-wheel">
+                                @{
+                                    var wheelNumbers = new[] { 0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26 };
+                                }
+                                @foreach (var num in wheelNumbers)
+                                {
+                                    string colorClass = num == 0 ? "green" : 
+                                                      new[]{1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36}.Contains(num) ? "red" : "black";
+                                    string winningClass = (Model.Game.LastResult.HasValue && Model.Game.LastResult.Value == num) ? "winning" : "";
+                                    <div class="wheel-number @colorClass @winningClass" data-bet="@num" onclick="selectBet('@num')">
+                                        @(num == 0 ? "0" : num.ToString())
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Column bets -->
-                <div class="column-bets">
-                    <div class="bet-cell column" data-bet="col1" data-odds="2:1" data-payout="2">2 to 1</div>
-                    <div class="bet-cell column" data-bet="col2" data-odds="2:1" data-payout="2">2 to 1</div>
-                    <div class="bet-cell column" data-bet="col3" data-odds="2:1" data-payout="2">2 to 1</div>
+                <!-- Betting Table -->
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Betting Table</h5>
+                            
+                            <!-- Dozens -->
+                            <div class="row mb-2">
+                                <div class="col-4">
+                                    <button class="btn btn-outline-primary w-100 bet-button" data-bet="1st12" onclick="selectBet('1st12')">
+                                        1st 12
+                                        @if (Model.Game.ShowOdds) { <small>(2:1)</small> }
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-outline-primary w-100 bet-button" data-bet="2nd12" onclick="selectBet('2nd12')">
+                                        2nd 12
+                                        @if (Model.Game.ShowOdds) { <small>(2:1)</small> }
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-outline-primary w-100 bet-button" data-bet="3rd12" onclick="selectBet('3rd12')">
+                                        3rd 12
+                                        @if (Model.Game.ShowOdds) { <small>(2:1)</small> }
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Main Numbers Grid -->
+                            <div class="row">
+                                <div class="col-1">
+                                    <!-- Zero Column -->
+                                    <div class="d-grid gap-1 mb-2">
+                                        @{
+                                            string winningZeroClass = (Model.Game.LastResult.HasValue && Model.Game.LastResult.Value == 0) ? "winning-button" : "";
+                                            string winningDoubleZeroClass = (Model.Game.LastResult.HasValue && Model.Game.LastResult.Value == 00) ? "winning-button" : "";
+                                        }
+                                        <button class="btn btn-success bet-button @winningZeroClass" data-bet="0" onclick="selectBet('0')">
+                                            0
+                                            @if (Model.Game.ShowOdds) { <small>(35:1)</small> }
+                                        </button>
+                                        <button class="btn btn-success bet-button @winningDoubleZeroClass" data-bet="00" onclick="selectBet('00')">
+                                            00
+                                            @if (Model.Game.ShowOdds) { <small>(35:1)</small> }
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-9">
+                                    <!-- Numbers 1-36 -->
+                                    @for (int row = 0; row < 12; row++)
+                                    {
+                                        <div class="row mb-1">
+                                            @for (int col = 0; col < 3; col++)
+                                            {
+                                                int number = (row * 3) + col + 1;
+                                                bool isRed = new[]{1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36}.Contains(number);
+                                                string colorClass = isRed ? "btn-danger" : "btn-dark";
+                                                <div class="col-4">
+                                                    @{
+                                                        string winningButtonClass = (Model.Game.LastResult.HasValue && Model.Game.LastResult.Value == number) ? "winning-button" : "";
+                                                    }
+                                                    <button class="btn @colorClass w-100 bet-button @winningButtonClass" data-bet="@number" onclick="selectBet('@number')">
+                                                        @number
+                                                        @if (Model.Game.ShowOdds) { <small>(35:1)</small> }
+                                                    </button>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-2">
+                                    <!-- Column Bets -->
+                                    <div class="d-grid gap-1">
+                                        <button class="btn btn-warning bet-button" data-bet="col1" onclick="selectBet('col1')">
+                                            2 to 1
+                                            @if (Model.Game.ShowOdds) { <small>(2:1)</small> }
+                                        </button>
+                                        <button class="btn btn-warning bet-button" data-bet="col2" onclick="selectBet('col2')">
+                                            2 to 1
+                                            @if (Model.Game.ShowOdds) { <small>(2:1)</small> }
+                                        </button>
+                                        <button class="btn btn-warning bet-button" data-bet="col3" onclick="selectBet('col3')">
+                                            2 to 1
+                                            @if (Model.Game.ShowOdds) { <small>(2:1)</small> }
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Outside Bets -->
+                            <div class="row mt-2">
+                                <div class="col-2">
+                                    <button class="btn btn-outline-secondary w-100 bet-button" data-bet="1to18" onclick="selectBet('1to18')">
+                                        1 to 18
+                                        @if (Model.Game.ShowOdds) { <small>(1:1)</small> }
+                                    </button>
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-outline-secondary w-100 bet-button" data-bet="even" onclick="selectBet('even')">
+                                        EVEN
+                                        @if (Model.Game.ShowOdds) { <small>(1:1)</small> }
+                                    </button>
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-danger w-100 bet-button" data-bet="red" onclick="selectBet('red')">
+                                        RED
+                                        @if (Model.Game.ShowOdds) { <small>(1:1)</small> }
+                                    </button>
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-dark w-100 bet-button" data-bet="black" onclick="selectBet('black')">
+                                        BLACK
+                                        @if (Model.Game.ShowOdds) { <small>(1:1)</small> }
+                                    </button>
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-outline-secondary w-100 bet-button" data-bet="odd" onclick="selectBet('odd')">
+                                        ODD
+                                        @if (Model.Game.ShowOdds) { <small>(1:1)</small> }
+                                    </button>
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-outline-secondary w-100 bet-button" data-bet="19to36" onclick="selectBet('19to36')">
+                                        19 to 36
+                                        @if (Model.Game.ShowOdds) { <small>(1:1)</small> }
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Outside Bets -->
-            <div class="outside-bets">
-                <div class="bet-cell outside" data-bet="1to18" data-odds="1:1" data-payout="1">1 to 18</div>
-                <div class="bet-cell outside" data-bet="even" data-odds="1:1" data-payout="1">EVEN</div>
-                <div class="bet-cell red outside" data-bet="red" data-odds="1:1" data-payout="1">🔴</div>
-                <div class="bet-cell black outside" data-bet="black" data-odds="1:1" data-payout="1">⚫</div>
-                <div class="bet-cell outside" data-bet="odd" data-odds="1:1" data-payout="1">ODD</div>
-                <div class="bet-cell outside" data-bet="19to36" data-odds="1:1" data-payout="1">19 to 36</div>
-            </div>
-        </div>
-    </div>
+            <!-- Game History -->
+            @if (Model.Game.GameHistory.Any())
+            {
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Game History</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Result</th>
+                                                <th>Color</th>
+                                                <th>Total Bet</th>
+                                                <th>Winnings</th>
+                                                <th>Net</th>
+                                                <th>Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var game in Model.Game.GameHistory.TakeLast(10).Reverse())
+                                            {
+                                                <tr>
+                                                    <td>@game.Result</td>
+                                                    <td><span class="badge bg-@(game.Color == "red" ? "danger" : game.Color == "black" ? "dark" : "success")">@game.Color.ToUpper()</span></td>
+                                                    <td>$@game.TotalBet</td>
+                                                    <td>$@game.Winnings</td>
+                                                    <td class="@(game.NetWinnings > 0 ? "text-success" : game.NetWinnings < 0 ? "text-danger" : "text-muted")">
+                                                        $@game.NetWinnings
+                                                    </td>
+                                                    <td>@game.Timestamp.ToString("HH:mm:ss")</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
 
-    <!-- Bet Input and Controls -->
-    <div class="bet-controls">
-        <div class="bet-input-container">
-            <label for="betAmount">Bet:</label>
-            <input type="number" id="betAmount" placeholder="Enter amount" min="1" step="1">
-        </div>
-        
-        <div class="game-controls">
-            <button id="spinButton" class="spin-button">SPIN</button>
-            <button id="clearBets" class="clear-button">Clear Bets</button>
-        </div>
-    </div>
+            <!-- Rules Section -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <button class="btn btn-link text-decoration-none w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRules" aria-expanded="false" aria-controls="collapseRules">
+                                    Roulette Rules <i class="fas fa-chevron-down float-end"></i>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseRules" class="collapse" aria-labelledby="rulesHeading">
+                            <div class="card-body" style="background-color: #f8f9fa; color: #333;">
+                                <h6 style="color: #333;">Objective:</h6>
+                                <p style="color: #333;">Predict which number the ball will land on after the wheel is spun.</p>
 
-    <!-- Current Bets Display -->
-    <div id="currentBets" class="current-bets"></div>
+                                <h6 style="color: #333;">Betting Options:</h6>
+                                <ul style="color: #333;">
+                                    <li style="color: #333;"><strong>Straight Up (Single Number):</strong> Bet on any single number (0, 00, 1-36). Payout: 35 to 1.</li>
+                                    <li style="color: #333;"><strong>Red/Black:</strong> Bet on the color of the winning number. Payout: 1 to 1.</li>
+                                    <li style="color: #333;"><strong>Even/Odd:</strong> Bet on whether the winning number is even or odd. Payout: 1 to 1.</li>
+                                    <li style="color: #333;"><strong>1-18/19-36:</strong> Bet on whether the winning number is in the low (1-18) or high (19-36) range. Payout: 1 to 1.</li>
+                                    <li style="color: #333;"><strong>Dozens Bet:</strong> Bet on the first (1-12), second (13-24), or third (25-36) set of twelve numbers. Payout: 2 to 1.</li>
+                                    <li style="color: #333;"><strong>Column Bet:</strong> Bet on one of the three vertical columns. Payout: 2 to 1.</li>
+                                </ul>
 
-    <!-- Navigation -->
-    <div class="navigation">
-        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Back to Menu</a>
-    </div>
+                                <h6 style="color: #333;">Gameplay:</h6>
+                                <ol style="color: #333;">
+                                    <li style="color: #333;">Click on any number or betting area to select it.</li>
+                                    <li style="color: #333;">Enter your bet amount in the input field.</li>
+                                    <li style="color: #333;">Click "Place Bet" to confirm your bet.</li>
+                                    <li style="color: #333;">Click "SPIN" to spin the wheel.</li>
+                                    <li style="color: #333;">The winning number will be highlighted in gold.</li>
+                                    <li style="color: #333;">Your winnings will be calculated and displayed.</li>
+                                </ol>
 
-    <!-- Collapsible Sections -->
-    <div class="collapsible-sections">
-        <div class="collapsible">
-            <div class="collapsible-header">
-                <span class="collapsible-icon">▶</span>
-                <span>History</span>
-            </div>
-            <div class="collapsible-content">
-                <div id="gameHistory">No games played yet.</div>
-            </div>
-        </div>
-        
-        <div class="collapsible">
-            <div class="collapsible-header">
-                <span class="collapsible-icon">▶</span>
-                <span>Rules</span>
-            </div>
-            <div class="collapsible-content">
-                <div class="rules-content">
-                    <h4>Roulette Rules:</h4>
-                    <ul>
-                        <li><strong>Straight Up:</strong> Bet on a single number (35:1 payout)</li>
-                        <li><strong>Red/Black:</strong> Bet on color (1:1 payout)</li>
-                        <li><strong>Even/Odd:</strong> Bet on even or odd numbers (1:1 payout)</li>
-                        <li><strong>1-18/19-36:</strong> Bet on low or high numbers (1:1 payout)</li>
-                        <li><strong>Dozens:</strong> Bet on 1st, 2nd, or 3rd dozen (2:1 payout)</li>
-                        <li><strong>Columns:</strong> Bet on any of the three columns (2:1 payout)</li>
-                    </ul>
+                                <h6 style="color: #333;">"Reveal Odds?" Feature:</h6>
+                                <p style="color: #333;">Toggle this switch to see the odds and payout information for each betting area when you hover over them.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Hover Info Tooltip -->
-<div id="hoverInfo" class="hover-tooltip"></div>
-
 <style>
-/* Main Container */
-.roulette-container {
-    background: #0d4f3c;
-    min-height: 100vh;
-    color: white;
-    font-family: Arial, sans-serif;
-    padding: 20px;
-}
-
-/* Header */
-.roulette-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 0 20px;
-}
-
-.hamburger-menu {
-    font-size: 24px;
-    cursor: pointer;
-}
-
-.roulette-title {
-    font-size: 2.5em;
-    margin: 0;
-    text-align: center;
-    flex-grow: 1;
-}
-
-.header-controls {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.odds-toggle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 16px;
-}
-
-.user-icon {
-    font-size: 24px;
-    cursor: pointer;
-}
-
-/* Game Result */
-.game-result {
-    text-align: center;
-    font-size: 1.5em;
-    margin-bottom: 20px;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-}
-
-/* Main Layout */
-.roulette-main {
-    display: flex;
-    gap: 30px;
-    margin-bottom: 30px;
-}
-
-/* Roulette Wheel */
-.roulette-wheel-container {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .roulette-wheel {
-    width: 300px;
-    height: 300px;
-    border: 8px solid #8B4513;
-    border-radius: 50%;
-    background: #228B22;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.wheel-center {
-    width: 280px;
-    height: 280px;
-    border-radius: 50%;
-    background: #006400;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-
-.wheel-numbers {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 2px;
-    width: 100%;
-    height: 100%;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    border: 3px solid #8B4513;
+    border-radius: 50%;
     padding: 10px;
+    background: #228B22;
 }
 
 .wheel-number {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: bold;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
     transition: all 0.2s ease;
+    min-height: 25px;
+    color: white !important;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.8);
 }
 
 .wheel-number.red {
     background: #DC143C;
-    color: white;
+    color: white !important;
 }
 
 .wheel-number.black {
     background: #000;
-    color: white;
+    color: white !important;
 }
 
 .wheel-number.green {
     background: #228B22;
-    color: white;
+    color: white !important;
 }
 
 .wheel-number:hover {
     transform: scale(1.1);
-    box-shadow: 0 0 10px gold;
+    box-shadow: 0 0 5px gold;
 }
 
-/* Betting Table */
-.betting-table {
-    flex: 2;
-    background: #2d5a3d;
-    border-radius: 8px;
-    padding: 20px;
+.wheel-number.winning {
+    animation: winningPulse 2s ease-in-out infinite;
+    box-shadow: 0 0 15px #FFD700, 0 0 25px #FFD700, 0 0 35px #FFD700;
+    border: 3px solid #FFD700;
+    transform: scale(1.2);
+    z-index: 10;
+    position: relative;
 }
 
-/* Dozens Row */
-.dozens-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
-    margin-bottom: 10px;
+@@keyframes winningPulse {
+    0% {
+        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFD700, 0 0 35px #FFD700;
+        transform: scale(1.2);
+    }
+    50% {
+        box-shadow: 0 0 25px #FFD700, 0 0 35px #FFD700, 0 0 45px #FFD700;
+        transform: scale(1.3);
+    }
+    100% {
+        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFD700, 0 0 35px #FFD700;
+        transform: scale(1.2);
+    }
 }
 
-/* Numbers Grid */
-.numbers-grid {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.zero-column {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.main-numbers {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.number-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
-}
-
-.column-bets {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-/* Outside Bets */
-.outside-bets {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 5px;
-}
-
-/* Bet Cells */
-.bet-cell {
-    padding: 15px 10px;
-    text-align: center;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
-    transition: all 0.2s ease;
-    border: 2px solid transparent;
-    min-height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.bet-cell.red {
-    background: #DC143C;
-    color: white;
-}
-
-.bet-cell.black {
-    background: #000;
-    color: white;
-}
-
-.bet-cell.green {
-    background: #228B22;
-    color: white;
-}
-
-.bet-cell.outside {
-    background: #4a6741;
-    color: white;
-}
-
-.bet-cell.dozens {
-    background: #6b8e23;
-    color: white;
-}
-
-.bet-cell.column {
-    background: #8b7355;
-    color: white;
-}
-
-.bet-cell:hover {
-    border-color: gold;
-    transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-}
-
-.bet-cell.selected {
-    border-color: gold;
-    box-shadow: 0 0 15px gold;
-    background: rgba(255, 215, 0, 0.2);
-}
-
-/* Bet Controls */
-.bet-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 0 20px;
-}
-
-.bet-input-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.bet-input-container label {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-#betAmount {
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 150px;
-}
-
-.game-controls {
-    display: flex;
-    gap: 15px;
-}
-
-.spin-button {
-    background: #DC143C;
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.spin-button:hover {
-    background: #B22222;
-    transform: scale(1.05);
-}
-
-.spin-button:disabled {
-    background: #666;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.clear-button {
-    background: #666;
-    color: white;
-    border: none;
-    padding: 15px 20px;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.clear-button:hover {
-    background: #555;
-}
-
-/* Current Bets */
-.current-bets {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-    min-height: 50px;
-}
-
-/* Navigation */
-.navigation {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-/* Collapsible Sections */
-.collapsible-sections {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.collapsible {
-    margin-bottom: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.collapsible-header {
-    padding: 15px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: bold;
-    transition: background 0.2s ease;
-}
-
-.collapsible-header:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.collapsible-icon {
-    transition: transform 0.2s ease;
-}
-
-.collapsible.active .collapsible-icon {
-    transform: rotate(90deg);
-}
-
-.collapsible-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-}
-
-.collapsible.active .collapsible-content {
-    max-height: 500px;
-}
-
-.collapsible-content > div {
-    padding: 15px;
-}
-
-/* Hover Tooltip */
-.hover-tooltip {
-    position: absolute;
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
+.bet-button {
     font-size: 12px;
-    pointer-events: none;
-    z-index: 1000;
-    display: none;
-    max-width: 200px;
-    border: 1px solid gold;
+    padding: 5px;
+    margin: 1px;
+    color: white !important;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.8);
 }
 
-/* Animations */
-.spinning {
-    animation: spin 2s linear infinite;
+.bet-button:hover {
+    transform: scale(1.05);
+    color: white !important;
 }
 
-@@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+.bet-button.selected {
+    box-shadow: 0 0 10px gold;
+    border: 2px solid gold;
+    color: white !important;
 }
 
-/* Responsive Design */
-@@media (max-width: 768px) {
-    .roulette-main {
-        flex-direction: column;
+.bet-button.winning-button {
+    animation: winningButtonPulse 2s ease-in-out infinite;
+    box-shadow: 0 0 15px #FFD700, 0 0 25px #FFD700, 0 0 35px #FFD700;
+    border: 3px solid #FFD700 !important;
+    transform: scale(1.1);
+    z-index: 10;
+    position: relative;
+}
+
+@@keyframes winningButtonPulse {
+    0% {
+        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFD700, 0 0 35px #FFD700;
+        transform: scale(1.1);
     }
-    
-    .roulette-wheel {
-        width: 250px;
-        height: 250px;
+    50% {
+        box-shadow: 0 0 25px #FFD700, 0 0 35px #FFD700, 0 0 45px #FFD700;
+        transform: scale(1.15);
     }
-    
-    .wheel-center {
-        width: 230px;
-        height: 230px;
+    100% {
+        box-shadow: 0 0 15px #FFD700, 0 0 25px #FFD700, 0 0 35px #FFD700;
+        transform: scale(1.1);
     }
-    
-    .bet-controls {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .outside-bets {
-        grid-template-columns: repeat(3, 1fr);
-    }
+}
+
+/* Ensure all text is visible */
+.card-title {
+    color: #333 !important;
+}
+
+.card-text {
+    color: #333 !important;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+/* Button text visibility */
+.btn {
+    color: white !important;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+
+.btn-outline-primary, .btn-outline-secondary {
+    color: #007bff !important;
+    text-shadow: none;
+}
+
+.btn-outline-primary:hover, .btn-outline-secondary:hover {
+    color: white !important;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
 }
 </style>
 
 <script>
+let selectedBetType = '';
+
+function selectBet(betType) {
+    selectedBetType = betType;
+    document.getElementById('selectedBetType').value = betType;
+    
+    // Remove previous selection
+    document.querySelectorAll('.bet-button, .wheel-number').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Add selection to clicked button
+    event.target.classList.add('selected');
+    
+    // Show feedback
+    console.log('Selected bet type:', betType);
+}
+
+function validateBet() {
+    if (!selectedBetType) {
+        alert('Please select a betting area first by clicking on a number or betting option.');
+        return false;
+    }
+    
+    const betAmount = document.querySelector('input[name="betAmount"]').value;
+    if (!betAmount || betAmount <= 0) {
+        alert('Please enter a valid bet amount.');
+        return false;
+    }
+    
+    return true;
+}
+
+// Add click handlers to all betting areas
 document.addEventListener('DOMContentLoaded', function() {
-    // Game state
-    let currentBets = [];
-    let gameHistory = [];
-    let totalWinnings = 0;
-    
-    // DOM elements
-    const spinButton = document.getElementById('spinButton');
-    const gameResult = document.getElementById('gameResult');
-    const hoverInfo = document.getElementById('hoverInfo');
-    const revealOddsCheckbox = document.getElementById('revealOdds');
-    const betAmountInput = document.getElementById('betAmount');
-    const currentBetsDiv = document.getElementById('currentBets');
-    const clearBetsButton = document.getElementById('clearBets');
-    const gameHistoryDiv = document.getElementById('gameHistory');
-    
-    // Initialize
-    updateCurrentBetsDisplay();
-    updateGameResult();
-    
-    // Reveal Odds functionality
-    revealOddsCheckbox.addEventListener('change', function() {
-        const betCells = document.querySelectorAll('.bet-cell, .wheel-number');
-        betCells.forEach(cell => {
-            if (this.checked) {
-                const odds = cell.dataset.odds;
-                const payout = cell.dataset.payout;
-                if (odds && payout) {
-                    cell.title = `Odds: ${odds} • Payout: ${payout}:1`;
-                }
-            } else {
-                cell.title = '';
-            }
+    // Add click handlers to wheel numbers
+    document.querySelectorAll('.wheel-number').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const betType = this.getAttribute('data-bet');
+            selectBet(betType);
         });
     });
     
-    // Betting functionality
-    const betCells = document.querySelectorAll('.bet-cell, .wheel-number');
-    betCells.forEach(cell => {
-        cell.addEventListener('click', function() {
-            const betAmount = parseInt(betAmountInput.value);
-            if (!betAmount || betAmount <= 0) {
-                alert('Please enter a valid bet amount');
-                return;
-            }
-            
-            const betType = this.dataset.bet;
-            const odds = this.dataset.odds;
-            const payout = this.dataset.payout;
-            
-            if (!betType) return;
-            
-            // Check if bet already exists
-            const existingBet = currentBets.find(bet => bet.type === betType);
-            if (existingBet) {
-                existingBet.amount += betAmount;
-            } else {
-                currentBets.push({
-                    type: betType,
-                    amount: betAmount,
-                    odds: odds,
-                    payout: payout,
-                    element: this
-                });
-            }
-            
-            // Visual feedback
-            this.classList.add('selected');
-            updateCurrentBetsDisplay();
+    // Add click handlers to bet buttons
+    document.querySelectorAll('.bet-button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const betType = this.getAttribute('data-bet');
+            selectBet(betType);
         });
     });
-    
-    // Clear bets
-    clearBetsButton.addEventListener('click', function() {
-        currentBets.forEach(bet => {
-            bet.element.classList.remove('selected');
-        });
-        currentBets = [];
-        updateCurrentBetsDisplay();
-    });
-    
-    // Spin functionality
-    spinButton.addEventListener('click', async function() {
-        if (currentBets.length === 0) {
-            alert('Please place at least one bet before spinning');
-            return;
-        }
-        
-        spinButton.disabled = true;
-        spinButton.textContent = 'SPINNING...';
-        spinButton.classList.add('spinning');
-        
-        try {
-            const res = await fetch('/Roulette/Spin', { method: 'POST' });
-            const data = await res.json();
-            
-            // Calculate winnings
-            let roundWinnings = 0;
-            const winningBets = [];
-            
-            currentBets.forEach(bet => {
-                if (isWinningBet(bet.type, data.number, data.color)) {
-                    const payout = parseInt(bet.payout);
-                    const winnings = bet.amount * payout;
-                    roundWinnings += winnings;
-                    winningBets.push({
-                        type: bet.type,
-                        amount: bet.amount,
-                        winnings: winnings
-                    });
-                }
-            });
-            
-            const totalBetAmount = currentBets.reduce((sum, bet) => sum + bet.amount, 0);
-            const netWinnings = roundWinnings - totalBetAmount;
-            totalWinnings += netWinnings;
-            
-            // Update game result
-            const resultText = netWinnings > 0 ? 
-                `You won $${netWinnings}!` : 
-                netWinnings < 0 ? 
-                `You lost $${Math.abs(netWinnings)}.` : 
-                'You broke even!';
-            
-            gameResult.textContent = resultText;
-            gameResult.style.color = netWinnings > 0 ? '#90EE90' : netWinnings < 0 ? '#FFB6C1' : '#FFFFE0';
-            
-            // Add to history
-            gameHistory.push({
-                number: data.number,
-                color: data.color,
-                bets: currentBets.length,
-                totalBet: totalBetAmount,
-                winnings: roundWinnings,
-                netWinnings: netWinnings,
-                timestamp: new Date()
-            });
-            
-            updateGameHistory();
-            
-            // Highlight winning number
-            highlightWinningNumber(data.number);
-            
-            // Clear current bets
-            currentBets.forEach(bet => {
-                bet.element.classList.remove('selected');
-            });
-            currentBets = [];
-            updateCurrentBetsDisplay();
-            
-        } catch (error) {
-            gameResult.textContent = 'Error spinning. Please try again.';
-            gameResult.style.color = '#FFB6C1';
-        } finally {
-            spinButton.disabled = false;
-            spinButton.textContent = 'SPIN';
-            spinButton.classList.remove('spinning');
-        }
-    });
-    
-    // Hover tooltips
-    betCells.forEach(cell => {
-        cell.addEventListener('mouseenter', function(e) {
-            if (revealOddsCheckbox.checked) {
-                const odds = this.dataset.odds;
-                const payout = this.dataset.payout;
-                if (odds && payout) {
-                    hoverInfo.innerHTML = `
-                        <strong>${this.textContent}</strong><br>
-                        Odds: ${odds}<br>
-                        Payout: ${payout}:1
-                    `;
-                    hoverInfo.style.display = 'block';
-                }
-            }
-        });
-        
-        cell.addEventListener('mousemove', function(e) {
-            if (hoverInfo.style.display === 'block') {
-                hoverInfo.style.left = (e.pageX + 10) + 'px';
-                hoverInfo.style.top = (e.pageY - 10) + 'px';
-            }
-        });
-        
-        cell.addEventListener('mouseleave', function() {
-            hoverInfo.style.display = 'none';
-        });
-    });
-    
-    // Collapsible sections
-    const collapsibleHeaders = document.querySelectorAll('.collapsible-header');
-    collapsibleHeaders.forEach(header => {
-        header.addEventListener('click', function() {
-            const collapsible = this.parentElement;
-            collapsible.classList.toggle('active');
-        });
-    });
-    
-    // Helper functions
-    function isWinningBet(betType, winningNumber, winningColor) {
-        const number = parseInt(winningNumber);
-        
-        switch (betType) {
-            case '0':
-            case '00':
-                return betType === winningNumber.toString();
-            case 'red':
-                return winningColor === 'red';
-            case 'black':
-                return winningColor === 'black';
-            case 'even':
-                return number > 0 && number % 2 === 0;
-            case 'odd':
-                return number > 0 && number % 2 === 1;
-            case '1to18':
-                return number >= 1 && number <= 18;
-            case '19to36':
-                return number >= 19 && number <= 36;
-            case '1st12':
-                return number >= 1 && number <= 12;
-            case '2nd12':
-                return number >= 13 && number <= 24;
-            case '3rd12':
-                return number >= 25 && number <= 36;
-            case 'col1':
-                return [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34].includes(number);
-            case 'col2':
-                return [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35].includes(number);
-            case 'col3':
-                return [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36].includes(number);
-            default:
-                // Individual number bet
-                return parseInt(betType) === number;
-        }
-    }
-    
-    function highlightWinningNumber(number) {
-        const winningCells = document.querySelectorAll(`[data-bet="${number}"], [data-number="${number}"]`);
-        winningCells.forEach(cell => {
-            cell.style.outline = '3px solid gold';
-            cell.style.transform = 'scale(1.1)';
-            setTimeout(() => {
-                cell.style.outline = '';
-                cell.style.transform = '';
-            }, 3000);
-        });
-    }
-    
-    function updateCurrentBetsDisplay() {
-        if (currentBets.length === 0) {
-            currentBetsDiv.innerHTML = '<em>No bets placed</em>';
-            return;
-        }
-        
-        const totalBet = currentBets.reduce((sum, bet) => sum + bet.amount, 0);
-        const betsList = currentBets.map(bet => 
-            `${bet.type}: $${bet.amount} (${bet.odds})`
-        ).join('<br>');
-        
-        currentBetsDiv.innerHTML = `
-            <strong>Current Bets (Total: $${totalBet}):</strong><br>
-            ${betsList}
-        `;
-    }
-    
-    function updateGameResult() {
-        if (totalWinnings > 0) {
-            gameResult.textContent = `Total Winnings: +$${totalWinnings}`;
-            gameResult.style.color = '#90EE90';
-        } else if (totalWinnings < 0) {
-            gameResult.textContent = `Total Losses: -$${Math.abs(totalWinnings)}`;
-            gameResult.style.color = '#FFB6C1';
-        } else {
-            gameResult.textContent = 'You won/lost $ x!';
-            gameResult.style.color = '#FFFFE0';
-        }
-    }
-    
-    function updateGameHistory() {
-        if (gameHistory.length === 0) {
-            gameHistoryDiv.innerHTML = 'No games played yet.';
-            return;
-        }
-        
-        const historyList = gameHistory.slice(-10).reverse().map(game => {
-            const time = game.timestamp.toLocaleTimeString();
-            const result = game.netWinnings > 0 ? 
-                `+$${game.netWinnings}` : 
-                game.netWinnings < 0 ? 
-                `-$${Math.abs(game.netWinnings)}` : 
-                '$0';
-            
-            return `
-                <div style="margin-bottom: 8px; padding: 5px; background: rgba(255,255,255,0.1); border-radius: 4px;">
-                    <strong>${game.number} (${game.color})</strong> - ${result} - ${time}
-                </div>
-            `;
-        }).join('');
-        
-        gameHistoryDiv.innerHTML = historyList;
-    }
 });
 </script>
