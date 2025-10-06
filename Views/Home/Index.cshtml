@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to SafeBet</h1>
+    <p class="lead">Your trusted online casino experience</p>
+    
+    <div class="row mt-5">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Blackjack</h5>
+                    <p class="card-text">Test your skills in the classic card game. Beat the dealer without going over 21!</p>
+                    <div class="mt-auto">
+                        <a href="@Url.Action("Index", "Blackjack")" class="btn btn-primary btn-lg">Play Blackjack</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Roulette</h5>
+                    <p class="card-text">Spin the wheel and bet on your lucky numbers. Red, black, or green - the choice is yours!</p>
+                    <div class="mt-auto">
+                        <a href="@Url.Action("Index", "Roulette")" class="btn btn-success btn-lg">Play Roulette</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
