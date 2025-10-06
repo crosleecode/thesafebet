@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/kaltun/Downloads/SafeBet/SafeBet.csproj": {}
+    "/Users/kaltun/Downloads/thesafebet/SafeBet.csproj": {}
   },
   "projects": {
-    "/Users/kaltun/Downloads/SafeBet/SafeBet.csproj": {
+    "/Users/kaltun/Downloads/thesafebet/SafeBet.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/kaltun/Downloads/SafeBet/SafeBet.csproj",
+        "projectUniqueName": "/Users/kaltun/Downloads/thesafebet/SafeBet.csproj",
         "projectName": "SafeBet",
-        "projectPath": "/Users/kaltun/Downloads/SafeBet/SafeBet.csproj",
+        "projectPath": "/Users/kaltun/Downloads/thesafebet/SafeBet.csproj",
         "packagesPath": "/Users/kaltun/.nuget/packages/",
-        "outputPath": "/Users/kaltun/Downloads/SafeBet/obj/",
+        "outputPath": "/Users/kaltun/Downloads/thesafebet/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/kaltun/.nuget/NuGet/NuGet.Config"

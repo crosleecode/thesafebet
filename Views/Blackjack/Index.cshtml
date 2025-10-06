@@ -14,14 +14,14 @@
 <h2 class="sb-title">Blackjack</h2>
 
 <div class="sb-top">
-  <form method="post" asp-action="NewGame"><button class="sb-btn">New Game</button></form>
+  <form method="post" asp-action="NewGame">
+    <button class="sb-btn">New Game</button>
+  </form>
+
   <div class="sb-bet">
-    <form method="post" asp-action="SetBet" class="sb-bet-form">
-      <label for="bet">Bet (placeholder):</label>
-      <input id="bet" name="amount" type="number" min="1" class="sb-input" />
-      <button class="sb-btn sb-btn-ghost">Set</button>
+    <form method="post" asp-action="SetBet">
+      <button class="sb-btn sb-btn-ghost">Bet (placeholder)</button>
     </form>
-    @if (bet.HasValue) { <div class="sb-bet-note">Current bet: <strong>@bet</strong></div> }
   </div>
 </div>
 
