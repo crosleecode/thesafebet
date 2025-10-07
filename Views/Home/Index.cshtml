@@ -1,33 +1,72 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "SafeBet – Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to SafeBet</h1>
-    <p class="lead">Your trusted online casino experience</p>
-    
-    <div class="row mt-5">
-        <div class="col-md-6 mb-4">
-            <div class="card h-100">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Blackjack</h5>
-                    <p class="card-text">Test your skills in the classic card game. Beat the dealer without going over 21!</p>
-                    <div class="mt-auto">
-                        <a href="@Url.Action("Index", "Blackjack")" class="btn btn-primary btn-lg">Play Blackjack</a>
-                    </div>
-                </div>
-            </div>
+<style>
+  .bg-dark-green{background:#0e3b22;}
+  .hero {
+    background: radial-gradient(70% 120% at 50% 0%, #184f31 0%, #0e3b22 60%);
+    color:#eaf7ef;
+  }
+</style>
+
+<!-- HERO -->
+<section class="hero py-5 border-bottom">
+  <div class="container text-center">
+    <h1 class="display-5 fw-semibold mb-2">Welcome to SafeBet</h1>
+    <p class="lead opacity-75 mb-0">Your practice arena for casino strategies — no real money, just learning.</p>
+  </div>
+</section>
+
+<!-- CARDS -->
+<div class="container py-5">
+  <div class="row g-4">
+
+    <!-- Blackjack -->
+    <div class="col-12 col-md-6">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="h4 mb-0">Blackjack</h2>
+            <span class="badge rounded-pill text-bg-success"
+                  data-bs-toggle="tooltip"
+                  title="Goal: get close to 21 without busting. Dealer hits until 17.">i</span>
+          </div>
+          <p class="text-muted mt-2">Deal, Hit, Stand. Later: ask the ML model for a hint.</p>
+          <div class="d-flex gap-2">
+            <a asp-controller="Blackjack" asp-action="Index" class="btn btn-primary">Play Blackjack</a>
+            <a asp-controller="Home" asp-action="BlackjackRules" class="btn btn-outline-success">Rules</a>
+          </div>
         </div>
-        <div class="col-md-6 mb-4">
-            <div class="card h-100">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Roulette</h5>
-                    <p class="card-text">Spin the wheel and bet on your lucky numbers. Red, black, or green - the choice is yours!</p>
-                    <div class="mt-auto">
-                        <a href="@Url.Action("Index", "Roulette")" class="btn btn-success btn-lg">Play Roulette</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+
+    <!-- Roulette -->
+    <div class="col-12 col-md-6">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="h4 mb-0">Roulette</h2>
+            <span class="badge rounded-pill text-bg-success"
+                  data-bs-toggle="tooltip"
+                  title="Single-zero wheel (0–36). Even-money & straight bets.">i</span>
+          </div>
+          <p class="text-muted mt-2">Interactive grid with random spin results. Hover for odds.</p>
+          <div class="d-flex gap-2">
+            <a asp-controller="Roulette" asp-action="Index" class="btn btn-success">Play Roulette</a>
+            <a asp-controller="Home" asp-action="RouletteRules" class="btn btn-outline-success">Odds</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
+
+<script>
+// enable Bootstrap tooltips if bootstrap.js is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  const els = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  els.forEach(el => { if (window.bootstrap?.Tooltip) new bootstrap.Tooltip(el); });
+});
+</script>

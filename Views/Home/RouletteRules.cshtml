@@ -1,0 +1,17 @@
+@{ ViewData["Title"] = "Roulette – Odds"; }
+<style>
+  .wrap{max-width:900px;margin:20px auto;padding:0 16px}
+  .btn{display:inline-block;border:1px solid #2c7a3f;padding:8px 12px;border-radius:10px;text-decoration:none;color:#2c7a3f}
+  .rules{line-height:1.8}
+</style>
+<div class="wrap">
+  <h1>Roulette – Basic Odds</h1>
+  <ul class="rules">
+    <li>Straight (1 number): 35:1</li>
+    <li>Split (2): 17:1 · Street (3): 11:1</li>
+    <li>Corner (4): 8:1 · Line (6): 5:1</li>
+    <li>Dozens/Columns: 2:1</li>
+    <li>Even-money (Red/Black, Even/Odd, 1–18/19–36): 1:1</li>
+  </ul>
+  <a class="btn" asp-controller="Home" asp-action="Index">← Back Home</a>
+</div>
