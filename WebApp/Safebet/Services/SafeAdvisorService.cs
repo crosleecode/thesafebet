@@ -11,7 +11,14 @@
         {
             _http = http;
         }
-
+        public async Task<AdviceRequester?> GetAdviceAsync(AdviceRequest req)
+        {
+            var response = await _http.PostAsJsonAsync("/advise", req);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<AdviceRequester>();
+        }
 
     }
+
+
 }

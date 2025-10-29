@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SafeBet.Models;
+using SafeBet.Services;
 
 namespace SafeBet.Controllers;
 
@@ -7,7 +8,13 @@ public class BlackjackController : Controller
 {
     private static readonly BlackjackGame _game = new();
     private static int? _betPlaceholder;      
-    private static string? _advicePlaceholder; 
+    private static string? _advicePlaceholder;
+    private readonly SafeAdvisorService _safeAdvisor;
+
+    public BlackjackController(SafeAdvisorService safeAdvisor)
+    {
+        _safeAdvisor = safeAdvisor;
+    }
 
     public IActionResult Index()
     {
@@ -50,10 +57,27 @@ public class BlackjackController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+
     [HttpPost]
+    public async Task<IActionResult> AskAdvice()
+    {
+        var req = new AdviceRequest
+        {
+            PlayerTotal = _game.Player.Total(),
+            DealerUpcard = _game.Dealer.Cards.First().Value,
+            UsableAce = _game.Player.Cards.Any(c => c.Rank == Rank.Ace) ? 1 : 0
+        };
+
+        var result = await _safeAdvisor.GetAdviceAsync(req);
+        _advicePlaceholder = result?.advice ?? "No advice";
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    /*[HttpPost]
     public IActionResult AskAdvice()
     {
         _advicePlaceholder = null; 
         return RedirectToAction(nameof(Index));
-    }
+    }*/
 }
