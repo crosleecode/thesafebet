@@ -1,42 +1,86 @@
-namespace SafeBet.Models;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
-public enum RoundResult { InProgress, PlayerWin, DealerWin, Push }
-
-public class BlackjackGame
+namespace SafeBet.Models
 {
-    public Deck Deck { get; private set; } = new();
-    public Hand Player { get; } = new();
-    public Hand Dealer { get; } = new();
-    public RoundResult Result { get; private set; } = RoundResult.InProgress;
-    public bool RoundOver => Result != RoundResult.InProgress;
-
-    public void StartRound()
+     public enum RoundResult { InProgress, PlayerWin, DealerWin, Push }
+    public class BlackjackGame
     {
-        Deck = new Deck();
-        Player.Cards.Clear(); Dealer.Cards.Clear();
-        Result = RoundResult.InProgress;
+        public int roundNum { get; private set; } = 0; 
+        public int? bet { get; private set; } = null;
 
-        Player.Add(Deck.Draw()); Dealer.Add(Deck.Draw());
-        Player.Add(Deck.Draw()); Dealer.Add(Deck.Draw());
+        public Deck Deck { get; private set; } = new Deck();
+        public Hand Player { get; } = new Hand();
+        public Hand Dealer { get; } = new Hand();
 
-        if (Player.IsBlackjack() && Dealer.IsBlackjack()) Result = RoundResult.Push;
-        else if (Player.IsBlackjack()) Result = RoundResult.PlayerWin;
-    }
+        public RoundResult Result { get; private set; } = RoundResult.InProgress;
+        public bool RoundOver => Result != RoundResult.InProgress;
 
-    public void PlayerHit()
-    {
-        if (RoundOver) return;
-        Player.Add(Deck.Draw());
-        if (Player.IsBust()) Result = RoundResult.DealerWin;
-    }
+        public void SetBet(int? amount)
+        {
+            if (amount.HasValue && amount.Value > 0)
+                bet = amount.Value;
+            else
+                bet = null;
+        }
+        public void StartRound()
+        {
+             Deck = new Deck();
+            Player.Cards.Clear();
+            Dealer.Cards.Clear();
 
-    public void PlayerStand()
-    {
-        if (RoundOver) return;
-        while (Dealer.Total() < 17) Dealer.Add(Deck.Draw());
-        if (Dealer.IsBust()) { Result = RoundResult.PlayerWin; return; }
+            Result = RoundResult.InProgress;
 
-        int p = Player.Total(), d = Dealer.Total();
-        Result = p > d ? RoundResult.PlayerWin : p < d ? RoundResult.DealerWin : RoundResult.Push;
+            Player.Add(Deck.Draw());
+            Dealer.Add(Deck.Draw());
+            Player.Add(Deck.Draw());
+            Dealer.Add(Deck.Draw());
+
+            roundNum++;
+
+            if (Player.IsBlackjack() && Dealer.IsBlackjack())
+            {
+             Result = RoundResult.Push;
+            }
+            else if (Player.IsBlackjack())
+            {
+                Result = RoundResult.PlayerWin;
+            }
+        }
+        public void PlayerHit()
+        {
+            if (RoundOver) return;
+
+            Player.Add(Deck.Draw());
+
+            if (Player.IsBust())
+            {
+                Result = RoundResult.DealerWin;
+            }
+        }
+
+        public void PlayerStand()
+        {
+            if (RoundOver) return;
+
+            while (Dealer.Total() < 17)
+            {
+            Dealer.Add(Deck.Draw());
+            }
+
+            if (Dealer.IsBust())
+            {
+                Result = RoundResult.PlayerWin;
+                return;
+            }
+
+            int p = Player.Total();
+            int d = Dealer.Total();
+
+            if (p > d) Result = RoundResult.PlayerWin;
+            else if (p < d) Result = RoundResult.DealerWin;
+            else Result = RoundResult.Push;
+        }
     }
 }
