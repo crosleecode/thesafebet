@@ -2,6 +2,11 @@ using SafeBet.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient<SafeBet.Services.SafeAdvisorService>(c =>
+{
+    c.BaseAddress = new Uri("http://127.0.0.1:8000");
+});
+
 builder.Services.AddHttpClient<SafeAdvisorService>(client =>
 {
     client.BaseAddress = new Uri("http://127.0.0.1:8000");

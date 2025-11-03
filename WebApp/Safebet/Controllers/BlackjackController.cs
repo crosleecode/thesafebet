@@ -1,14 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using SafeBet.Models;
+using SafeBet.Services;
 
 namespace SafeBet.Controllers
 {
     public class BlackjackController : Controller
     {
-        private static BlackjackGame _game = new BlackjackGame();
-        private static int? _bet;
+        private static readonly BlackjackGame _game = new();
         private static string? _advicePlaceholder;
+        private static int? _bet;
+        private readonly SafeAdvisorService _safeAdvisor;
 
+        public BlackjackController(SafeAdvisorService safeAdvisor)
+        {
+            _safeAdvisor = safeAdvisor;
+        }
         public IActionResult Index()
         {
          if (_game.Player.Cards.Count == 0 && _game.Result == RoundResult.InProgress)
@@ -23,7 +29,8 @@ namespace SafeBet.Controllers
 
             var vm = new BlackjackViewModel
             {
-                Game = _game
+                Game = _game,
+                Advice = _advicePlaceholder
             };
 
             return View(vm);
@@ -69,10 +76,20 @@ namespace SafeBet.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
         [HttpPost]
-        public IActionResult AskAdvice()
+        public async Task<IActionResult> AskAdvice()
         {
-            _advicePlaceholder = null;
+            var req = new AdviceRequest
+            {
+                PlayerTotal = _game.Player.Total(),
+                DealerUpcard = _game.Dealer.Cards.First().Value,
+                UsableAce = _game.Player.Cards.Any(c => c.Rank == Rank.Ace) ? 1 : 0
+            };
+
+            var result = await _safeAdvisor.GetAdviceAsync(req);
+            _advicePlaceholder = result?.advice ?? "No advice";
+
             return RedirectToAction(nameof(Index));
         }
     }

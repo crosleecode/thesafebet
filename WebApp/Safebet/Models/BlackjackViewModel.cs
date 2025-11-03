@@ -7,6 +7,8 @@ namespace SafeBet.Models
         public BlackjackGame Game { get; set; } = new BlackjackGame();
         public int roundNum => Game.roundNum;
         public int? bet => Game.bet;
+        public string? Advice { get; set; }
+
         public string BetDisplay
         {
             get

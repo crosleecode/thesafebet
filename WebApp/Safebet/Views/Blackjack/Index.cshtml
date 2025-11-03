@@ -6,15 +6,17 @@
 
 <h2 class="sb-title">Blackjack</h2>
 
+<div style="text-align:center; margin-bottom:20px;">
+    <form method="post" asp-action="NewGame" style="display:inline-block;">
+        <button class="sb-btn">New Game</button>
+    </form>
+</div>
+
 <div class="sb-top">
   <div class="sb-roundinfo">
     <div>Round: @Model.roundNum</div>
     <div>Bet: @Model.BetDisplay</div>
   </div>
-
-  <form method="post" asp-action="NewGame" class="inline-block">
-    <button class="sb-btn">New Game</button>
-  </form>
 
   <div class="sb-bet">
     <form method="post" asp-action="SetBet" class="inline-block">
@@ -59,6 +61,13 @@
     <form method="post" asp-action="Stand"><button class="sb-btn">Stand</button></form>
     <form method="post" asp-action="AskAdvice"><button class="sb-btn sb-btn-ghost">Ask Advice</button></form>
   </div>
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.Advice))
+{
+    <div style="text-align:center; margin-top:20px; color:white;">
+        <h3>Advice: @Model.Advice</h3>
+    </div>
 }
 
 @if (!string.IsNullOrWhiteSpace(Model.ResultText))

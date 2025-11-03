@@ -1,6 +1,17 @@
 ﻿namespace SafeBet.Models;
+using System.Text.Json.Serialization;
 
-public record AdviceRequest(int playerHand, int usableAce, int dealerHand);
+public sealed class AdviceRequest
+{
+    [JsonPropertyName("player_total")]
+    public int PlayerTotal { get; set; }
+
+    [JsonPropertyName("dealer_upcard")]
+    public int DealerUpcard { get; set; }
+
+    [JsonPropertyName("usable_ace")]
+    public int UsableAce { get; set; }
+}
 
 public class AdviceRequester
 {
