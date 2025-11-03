@@ -1,92 +1,117 @@
-@model SafeBet.Models.BlackjackGame
+@model SafeBet.Models.BlackjackViewModel
 @{
     ViewData["Title"] = "Blackjack (SafeBet)";
-    int? bet = ViewBag.Bet as int?;
-    string? advice = ViewBag.Advice as string;
-    string resultText = Model.Result switch {
-        SafeBet.Models.RoundResult.PlayerWin => "You win!",
-        SafeBet.Models.RoundResult.DealerWin => "Dealer wins.",
-        SafeBet.Models.RoundResult.Push      => "Push (tie).",
-        _ => ""
-    };
+    var game = Model.Game;
 }
 
 <h2 class="sb-title">Blackjack</h2>
 
-<div class="sb-top">
-  <form method="post" asp-action="NewGame">
-    <button class="sb-btn">New Game</button>
-  </form>
-
-  <div class="sb-bet">
-    <form method="post" asp-action="SetBet">
-      <button class="sb-btn sb-btn-ghost">Bet (placeholder)</button>
+<div style="text-align:center; margin-bottom:20px;">
+    <form method="post" asp-action="NewGame" style="display:inline-block;">
+        <button class="sb-btn">New Game</button>
     </form>
-  </div>
+</div>
+
+<div class="sb-top">
+    <div class="sb-roundinfo">
+        <div>Round: @Model.roundNum</div>
+        <div>Bet: @Model.BetDisplay</div>
+    </div>
+
+    <div class="sb-bet">
+        <form method="post" asp-action="SetBet" class="inline-block">
+            <input name="amount" type="number" min="1" step="1" placeholder="Enter bet" />
+            <button class="sb-btn sb-btn-ghost">Set Bet</button>
+        </form>
+    </div>
 </div>
 
 <div class="sb-table-wrap">
-  <div class="sb-table">
-    <div class="sb-seat sb-dealer">
-      <h3>Dealer</h3>
-      <div class="sb-cards">
-        @for (int i = 0; i < Model.Dealer.Cards.Count; i++)
-        {
-            var c = Model.Dealer.Cards[i];
-            if (!Model.RoundOver && i == 1) { <span class="sb-card sb-card-hidden"></span> }
-            else { <span class="sb-card">@RankLabel(c.Rank)@SuitChar(c.Suit)</span> }
-        }
-      </div>
-      @if (Model.RoundOver) { <div class="sb-total">Total: @Model.Dealer.Total()</div> }
-    </div>
+    <div class="sb-table">
 
-    <div class="sb-seat sb-player">
-      <h3>Player</h3>
-      <div class="sb-cards">
-        @foreach (var c in Model.Player.Cards)
-        { <span class="sb-card">@RankLabel(c.Rank)@SuitChar(c.Suit)</span> }
-      </div>
-      <div class="sb-total">Total: @Model.Player.Total()</div>
+        <div class="sb-seat sb-dealer">
+            <h3>Dealer</h3>
+            <div class="sb-cards">
+                @for (int i = 0; i < game.Dealer.Cards.Count; i++)
+                {
+                    var c = game.Dealer.Cards[i];
+                    if (!game.RoundOver && i == 1)
+                    {
+                        <span class="sb-card sb-card-hidden"></span>
+                    }
+                    else
+                    {
+
+                        <span class="sb-card">@RankLabel(c.Rank)@SuitChar(c.Suit)</span>
+                    }
+                }
+            </div>
+            @if (game.RoundOver)
+            {
+                <div class="sb-total">Total: @game.Dealer.Total()</div>
+            }
+        </div>
+
+        <div class="sb-seat sb-player">
+            <h3>Player</h3>
+            <div class="sb-cards">
+                @foreach (var c in game.Player.Cards)
+                {
+                    <span class="sb-card">@RankLabel(c.Rank)@SuitChar(c.Suit)</span>
+                }
+            </div>
+            <div class="sb-total">Total: @game.Player.Total()</div>
+        </div>
+
     </div>
-  </div>
 </div>
 
-@if (!Model.RoundOver)
+@if (!game.RoundOver)
 {
-  <div class="sb-actions-row">
-    <form method="post" asp-action="Hit"><button class="sb-btn">Hit</button></form>
-    <form method="post" asp-action="Stand"><button class="sb-btn">Stand</button></form>
-    <form method="post" asp-action="AskAdvice"><button class="sb-btn sb-btn-ghost">Ask Advice</button></form>
-  </div>
+    <div class="sb-actions-row">
+        <form method="post" asp-action="Hit"><button class="sb-btn">Hit</button></form>
+        <form method="post" asp-action="Stand"><button class="sb-btn">Stand</button></form>
+        <form method="post" asp-action="AskAdvice"><button class="sb-btn sb-btn-ghost">Ask Advice</button></form>
+    </div>
 }
 
-@if (!string.IsNullOrWhiteSpace(advice)) { <p class="sb-advice"><strong>@advice</strong></p> }
-@if (Model.RoundOver) { <div class="sb-result"><h3>@resultText</h3></div> }
+@if (!string.IsNullOrWhiteSpace(Model.Advice))
+{
+    <div style="text-align:center; margin-top:20px; color:white;">
+        <h3>Advice: @Model.Advice</h3>
+    </div>
+}
 
-@functions{
+@if (!string.IsNullOrWhiteSpace(Model.ResultText))
+{
+    <div class="sb-result"><h3>@Model.ResultText</h3></div>
+}
+
+@functions {
     private string SuitChar(SafeBet.Models.Suit s) => s switch
     {
-        SafeBet.Models.Suit.Hearts   => "♥",
+        SafeBet.Models.Suit.Hearts => "♥",
         SafeBet.Models.Suit.Diamonds => "♦",
-        SafeBet.Models.Suit.Clubs    => "♣",
-        SafeBet.Models.Suit.Spades   => "♠",
+        SafeBet.Models.Suit.Clubs => "♣",
+        SafeBet.Models.Suit.Spades => "♠",
         _ => "?"
     };
+
     private string RankLabel(SafeBet.Models.Rank r) => r switch
     {
-        SafeBet.Models.Rank.Ace   => "A",
-        SafeBet.Models.Rank.Two   => "2",
+        SafeBet.Models.Rank.Ace => "A",
+        SafeBet.Models.Rank.Two => "2",
         SafeBet.Models.Rank.Three => "3",
-        SafeBet.Models.Rank.Four  => "4",
-        SafeBet.Models.Rank.Five  => "5",
-        SafeBet.Models.Rank.Six   => "6",
+        SafeBet.Models.Rank.Four => "4",
+        SafeBet.Models.Rank.Five => "5",
+        SafeBet.Models.Rank.Six => "6",
         SafeBet.Models.Rank.Seven => "7",
         SafeBet.Models.Rank.Eight => "8",
-        SafeBet.Models.Rank.Nine  => "9",
-        SafeBet.Models.Rank.Ten   => "10",
-        SafeBet.Models.Rank.Jack  => "J",
+        SafeBet.Models.Rank.Nine => "9",
+        SafeBet.Models.Rank.Ten => "10",
+        SafeBet.Models.Rank.Jack => "J",
         SafeBet.Models.Rank.Queen => "Q",
-        SafeBet.Models.Rank.King  => "K",
+        SafeBet.Models.Rank.King => "K",
         _ => "?"
     };
 }

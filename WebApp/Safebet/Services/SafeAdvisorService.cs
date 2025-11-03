@@ -1,6 +1,6 @@
 ﻿namespace SafeBet.Services
 {
-
+    using System.Net.Http;
     using System.Net.Http.Json;
     using SafeBet.Models;
 
