@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center" style="background-color: #013220; color: #FFD700; padding: 60px 0;">
+    <h1 class="display-4">Welcome to SafeBet</h1>
+    <p style="color: #F0F0F0;">Your practice arena for casino strategies — no real money, just learning.</p>
+</div>
+
+<div class="container mt-5 d-flex justify-content-around flex-wrap">
+    <div class="card p-4 text-center shadow-lg mb-4" style="width: 45%; background-color: #FFFFFF; border: 3px solid #013220; border-radius: 15px;">
+        <h3 class="card-title" style="color: #006400; font-weight: 700;">Blackjack</h3>
+        <p style="color: #333333;">Deal, hit, stand, and test your skills against the dealer. Learn the odds and improve your strategy!</p>
+        <a asp-controller="Blackjack" asp-action="Index" class="btn" 
+           style="background-color: #006400; color: white; border-radius: 8px; padding: 10px 20px; margin-right: 8px;">
+           Play Blackjack
+        </a>
+        <a asp-controller="Blackjack" asp-action="Rules" class="btn" 
+           style="background-color: #FFD700; color: #013220; border-radius: 8px; padding: 10px 20px;">
+           Rules
+        </a>
+    </div>
+
+    <div class="card p-4 text-center shadow-lg mb-4" style="width: 45%; background-color: #FFFFFF; border: 3px solid #013220; border-radius: 15px;">
+        <h3 class="card-title" style="color: #B22222; font-weight: 700;">Roulette</h3>
+        <p style="color: #333333;">Spin the wheel and place your bets! Explore colors, numbers, and ranges while learning probabilities.</p>
+        <a asp-controller="Roulette" asp-action="Index" class="btn" 
+           style="background-color: #B22222; color: white; border-radius: 8px; padding: 10px 20px; margin-right: 8px;">
+           Play Roulette
+        </a>
+        <a asp-controller="Roulette" asp-action="Odds" class="btn" 
+           style="background-color: #FFD700; color: #013220; border-radius: 8px; padding: 10px 20px;">
+           Odds
+        </a>
+    </div>
+</div>

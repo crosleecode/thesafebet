@@ -1,0 +1,72 @@
+@model SafeBet.Models.StatisticsViewModel
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+<div class="container" style="max-width: 900px; margin-top: 40px; color: #e5f3df;">
+    <h1 class="text-center mb-4" style="color: #c7e7c0;">Game Statistics</h1>
+
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0" style="background-color:#002d00; color:#c7e7c0;">
+                <div class="card-body text-center">
+                    <h5>Total Games</h5>
+                    <p class="display-6 fw-bold">@Model.TotalGames</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0" style="background-color:#002d00; color:#c7e7c0;">
+                <div class="card-body text-center">
+                    <h5>Blackjack Games</h5>
+                    <p class="h3">@Model.BlackjackGames</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0" style="background-color:#002d00; color:#c7e7c0;">
+                <div class="card-body text-center">
+                    <h5>Roulette Games</h5>
+                    <p class="h3">@Model.RouletteGames</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0" style="background-color:#002d00; color:#a8f0a1;">
+                <div class="card-body text-center">
+                    <h5>Total Wins</h5>
+                    <p class="display-6 fw-bold text-success">@Model.TotalWins</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0" style="background-color:#002d00; color:#f7a3a3;">
+                <div class="card-body text-center">
+                    <h5>Total Losses</h5>
+                    <p class="display-6 fw-bold text-danger">@Model.TotalLosses</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0" style="background-color:#002d00; color:#c7e7c0;">
+                <div class="card-body text-center">
+                    <h5>Total Bets</h5>
+                    <p class="h4 fw-bold">$@Model.TotalBets</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="mt-4 text-center" style="font-size: 0.85rem; color: #c7e7c0;">
+        Last updated: @Model.LastUpdated
+    </p>
+
+    <div class="text-center">
+        <a href="/Home/Index" class="btn btn-outline-light mt-2 px-4 py-2">Back to Home</a>
+    </div>
+</div>
