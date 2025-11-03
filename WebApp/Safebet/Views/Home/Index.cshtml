@@ -27,7 +27,7 @@
       <div class="card h-100 shadow-sm border-0">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
-            <h2 class="h4 mb-0">Blackjack</h2>
+            <h2 class="h4 mb-0" style="color:#0e3b22;">Blackjack</h2>
             <span class="badge rounded-pill text-bg-success"
                   data-bs-toggle="tooltip"
                   title="Goal: get close to 21 without busting. Dealer hits until 17.">i</span>
@@ -46,7 +46,7 @@
       <div class="card h-100 shadow-sm border-0">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
-            <h2 class="h4 mb-0">Roulette</h2>
+            <h2 class="h4 mb-0" style="color:#0e3b22;">Roulette</h2>
             <span class="badge rounded-pill text-bg-success"
                   data-bs-toggle="tooltip"
                   title="Single-zero wheel (0–36). Even-money & straight bets.">i</span>
@@ -62,6 +62,12 @@
 
   </div>
 </div>
+
+<a asp-controller="Metrics" asp-action="Index"
+   class="btn"
+   style="background:#fff; color:#0e3b22; border:1px solid #0e3b22;">
+    View Stats
+</a>
 
 <script>
 // enable Bootstrap tooltips if bootstrap.js is loaded
