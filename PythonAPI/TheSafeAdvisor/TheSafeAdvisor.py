@@ -171,7 +171,7 @@ Q_GLOBAL = None
 def startup():
     global Q_GLOBAL
     random.seed(0)
-    Q_GLOBAL = trainQ(rounds=200000)
+    Q_GLOBAL = trainQ(rounds=1000000)
 
 @app.get("/health")
 def health():
