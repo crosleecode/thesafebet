@@ -4,3 +4,5 @@
 *.suo
 *.userosscache
 *.sln.docstates
+**/__pycache__/
+*.pyc
