@@ -1,0 +1,16 @@
+@{ ViewData["Title"] = "Blackjack – Rules"; }
+<style>
+  .wrap{max-width:900px;margin:20px auto;padding:0 16px}
+  .btn{display:inline-block;border:1px solid #2c7a3f;padding:8px 12px;border-radius:10px;text-decoration:none;color:#2c7a3f}
+  .rules{line-height:1.8}
+</style>
+<div class="wrap">
+  <h1>Blackjack – Quick Rules</h1>
+  <ul class="rules">
+    <li>Beat the dealer without going over 21.</li>
+    <li>Cards: 2–10 face value; J/Q/K = 10; Ace = 1 or 11.</li>
+    <li>Dealer hits until 17 (house rule).</li>
+    <li>Blackjack (Ace + 10-value) typically pays 3:2.</li>
+  </ul>
+  <a class="btn" asp-controller="Home" asp-action="Index">← Back Home</a>
+</div>

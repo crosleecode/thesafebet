@@ -1,0 +1,668 @@
+/* Roulette Page Styles */
+
+/* Container and Background */
+.roulette-container {
+    background: linear-gradient(135deg, #0a4728 0%, #1a5f3f 100%);
+    min-height: calc(100vh - 200px);
+    padding: 2rem 0 4rem 0;
+    color: #f5f5f5;
+    position: relative;
+    z-index: 1;
+}
+
+.roulette-title {
+    color: #ffd700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    font-weight: bold;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Status Cards */
+.status-card, .controls-card, .betting-table-card, .history-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    margin-bottom: 1rem;
+}
+
+.status-title, .controls-title, .table-title, .history-title {
+    color: #1a5f3f;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.status-content {
+    color: #333;
+}
+
+.last-result, .winnings, .total-bet {
+    margin-bottom: 0.5rem;
+}
+
+.label {
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.result-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 5px;
+    margin: 0 0.5rem;
+}
+
+.red-number {
+    background: #dc3545;
+    color: white;
+}
+
+.black-number {
+    background: #000;
+    color: white;
+}
+
+.green-number {
+    background: #28a745;
+    color: white;
+}
+
+.bets-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.bet-badge {
+    background: #007bff;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+/* Roulette Wheel Styles - Realistic Casino Design */
+.wheel-container {
+    background: rgba(255,255,255,0.95);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.wheel-title {
+    text-align: center;
+    color: #1a5f3f;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.wheel-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.wheel-stand {
+    width: 80px;
+    height: 50px;
+    background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
+    border-radius: 12px 12px 0 0;
+    margin-bottom: -8px;
+    z-index: 2;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    border: 2px solid #654321;
+}
+
+.wheel-outer {
+    width: 500px;
+    height: 500px;
+    position: relative;
+    border-radius: 50%;
+    /* Outer wooden rim */
+    background: linear-gradient(to bottom right, #92400e, #78350f, #451a03);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Inner wooden rim */
+.wheel-outer::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom right, #b45309, #92400e, #78350f);
+    z-index: 1;
+}
+
+/* Chrome separator ring */
+.wheel-outer::after {
+    content: '';
+    position: absolute;
+    inset: 24px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom right, #d1d5db, #9ca3af, #6b7280);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+.wheel {
+    width: 400px;
+    height: 400px;
+    position: relative;
+    border-radius: 50%;
+    transform-origin: center;
+    z-index: 5;
+    overflow: hidden;
+    transition: transform 5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.wheel-number {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+    border: 2px solid rgba(218,165,32,0.4);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.wheel-number:hover {
+    transform: scale(1.15);
+    z-index: 10;
+    box-shadow: 0 0 15px rgba(255,215,0,0.9), inset 0 2px 4px rgba(0,0,0,0.3);
+    border-color: #DAA520;
+}
+
+.wheel-number.red {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+}
+
+.wheel-number.black {
+    background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+}
+
+.wheel-number.green {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+}
+
+.wheel-number.winning {
+    animation: winningPulse 1s ease-in-out infinite;
+    box-shadow: 0 0 25px #ffd700, 0 0 40px #ffd700, inset 0 2px 4px rgba(0,0,0,0.3);
+    border: 3px solid #ffd700;
+    transform: scale(1.3);
+    z-index: 100;
+}
+
+/* Central Spindle - Golden hub */
+.wheel-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom right, #ca8a04, #a16207, #854d0e);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    border: 4px solid #a16207;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 6;
+}
+
+.wheel-center::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom right, #eab308, #ca8a04, #a16207);
+    z-index: 1;
+}
+
+.wheel-center::after {
+    content: '';
+    position: absolute;
+    inset: 20px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom right, #ca8a04, #92400e);
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+}
+
+.wheel-logo-img {
+    width: 100px;
+    height: 60px;
+    object-fit: contain;
+    z-index: 3;
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+/* Ball Track */
+.ball-track {
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom right, #78350f, #451a03, #000000);
+    box-shadow: inset 0 5px 20px rgba(0, 0, 0, 0.8);
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* Gold ring around ball track */
+.ball-track::before {
+    content: '';
+    position: absolute;
+    inset: 32px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom right, #ca8a04, #a16207, #854d0e);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.ball-track::after {
+    content: '';
+    position: absolute;
+    inset: 34px;
+    border-radius: 50%;
+    background: linear-gradient(to bottom right, #eab308, #ca8a04, #a16207);
+    z-index: 2;
+}
+
+/* Static deflector at top */
+.deflector {
+    position: absolute;
+    top: 56px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 12px solid #d1d5db;
+    z-index: 10;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+    pointer-events: none;
+}
+
+.result-display {
+    margin-top: 1.5rem;
+    text-align: center;
+    background: rgba(0,0,0,0.8);
+    padding: 1.5rem 2.5rem;
+    border-radius: 12px;
+    border: 3px solid #ffd700;
+    box-shadow: 0 4px 12px rgba(255,215,0,0.4);
+}
+
+.result-number-display {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    margin-bottom: 0.5rem;
+}
+
+.result-number-display .red-number,
+.result-number-display .black-number,
+.result-number-display .green-number {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.result-label {
+    font-size: 0.9rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 600;
+}
+
+/* Animations */
+@@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(1800deg);
+    }
+}
+
+@@keyframes ballSpin {
+    from {
+        transform: translateX(-50%) rotate(0deg);
+    }
+    to {
+        transform: translateX(-50%) rotate(1800deg);
+    }
+}
+
+@@keyframes winningPulse {
+    0%, 100% {
+        box-shadow: 0 0 25px #ffd700, 0 0 40px #ffd700, inset 0 2px 4px rgba(0,0,0,0.3);
+        transform: scale(1.3);
+    }
+    50% {
+        box-shadow: 0 0 35px #ffd700, 0 0 60px #ffd700, inset 0 2px 4px rgba(0,0,0,0.3);
+        transform: scale(1.4);
+    }
+}
+
+/* Controls */
+.bet-form {
+    margin-bottom: 1.5rem;
+}
+
+.bet-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.bet-input-group label {
+    font-weight: bold;
+    color: #333;
+    min-width: 100px;
+}
+
+.bet-input {
+    flex: 1;
+    min-width: 150px;
+}
+
+.bet-btn {
+    min-width: 120px;
+}
+
+.bet-hint {
+    display: block;
+    margin-top: 0.5rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.spin-btn {
+    flex: 1;
+    min-width: 180px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transition: all 0.3s;
+    border-radius: 8px;
+}
+
+.spin-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+}
+
+.spin-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.action-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+}
+
+/* Betting Table Buttons */
+.bet-button {
+    font-size: 12px;
+    padding: 8px 4px;
+    margin: 2px;
+    color: white !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    transition: all 0.2s;
+    border: 2px solid transparent;
+    border-radius: 4px;
+}
+
+.bet-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    color: white !important;
+}
+
+.bet-button.selected {
+    box-shadow: 0 0 15px rgba(255,215,0,0.8);
+    border: 2px solid #ffd700;
+    transform: scale(1.05);
+    color: white !important;
+}
+
+.bet-button.winning-button {
+    animation: winningButtonPulse 1s ease-in-out infinite;
+    box-shadow: 0 0 20px #ffd700, 0 0 30px #ffd700;
+    border: 3px solid #ffd700 !important;
+    transform: scale(1.1);
+    z-index: 10;
+    position: relative;
+}
+
+@@keyframes winningButtonPulse {
+    0%, 100% {
+        box-shadow: 0 0 20px #ffd700, 0 0 30px #ffd700;
+        transform: scale(1.1);
+    }
+    50% {
+        box-shadow: 0 0 30px #ffd700, 0 0 50px #ffd700;
+        transform: scale(1.15);
+    }
+}
+
+/* History Table */
+.history-table {
+    margin-top: 1rem;
+}
+
+.history-table thead {
+    background: #1a5f3f;
+    color: white;
+}
+
+.history-table tbody tr {
+    transition: background 0.2s;
+}
+
+.history-table tbody tr:hover {
+    background: #f0f0f0;
+}
+
+/* Layout Improvements */
+.roulette-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.roulette-status-section {
+    margin-bottom: 2rem;
+}
+
+.roulette-game-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.roulette-wheel-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.roulette-controls-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.roulette-table-section {
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.betting-table-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    margin-bottom: 0;
+}
+
+.roulette-history-section {
+    margin-bottom: 2rem;
+}
+
+/* Ensure footer doesn't overlap content - scoped to roulette pages only */
+.roulette-container ~ .footer {
+    position: relative;
+    z-index: 0;
+    margin-top: 3rem;
+    clear: both;
+    padding-top: 1rem;
+}
+
+/* Ensure Betting Table heading doesn't overlap with footer - roulette specific */
+.roulette-container .table-title {
+    position: relative;
+    z-index: 2;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive */
+@@media (max-width: 992px) {
+    .roulette-game-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .wheel-outer {
+        width: 400px;
+        height: 400px;
+    }
+    
+    .wheel {
+        width: 320px;
+        height: 320px;
+    }
+    
+    .wheel-number {
+        width: 38px;
+        height: 38px;
+        font-size: 11px;
+    }
+    
+    .wheel-center {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .wheel-center::before {
+        inset: 6px;
+    }
+    
+    .wheel-center::after {
+        inset: 16px;
+    }
+    
+    .wheel-logo-img {
+        width: 80px;
+        height: 48px;
+    }
+    
+    .deflector {
+        top: 50px;
+    }
+    
+    .result-number-display {
+        font-size: 2.5rem;
+    }
+}
+
+@@media (max-width: 768px) {
+    .roulette-title {
+        font-size: 2rem;
+    }
+    
+    .wheel-outer {
+        width: 350px;
+        height: 350px;
+    }
+    
+    .wheel {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .wheel-number {
+        width: 32px;
+        height: 32px;
+        font-size: 10px;
+    }
+    
+    .wheel-center {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .wheel-center::before {
+        inset: 5px;
+    }
+    
+    .wheel-logo-img {
+        width: 65px;
+        height: 39px;
+    }
+    
+    .deflector {
+        top: 45px;
+    }
+    
+    .result-number-display {
+        font-size: 2rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .spin-btn, .action-btn {
+        width: 100%;
+    }
+}
+
+
