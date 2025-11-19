@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "A4gEZ4GDhph9/AJHlD6ZlZ4CXEfkUyK5sTCQlncIpHg=",
+  "Hash": "4oTrLIbwL2VEYsZchibkh3p30zw710luUnXPoU/vlLo=",
   "Source": "SafeBet",
   "BasePath": "_content/SafeBet",
   "Mode": "Default",
@@ -91,6 +91,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/favicon.ico"
+    },
+    {
+      "Identity": "/Users/muqtarhaji/Documents/Capstone/thesafebet/wwwroot/Image/casino-table.jpg",
+      "SourceId": "SafeBet",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/muqtarhaji/Documents/Capstone/thesafebet/wwwroot/",
+      "BasePath": "_content/SafeBet",
+      "RelativePath": "Image/casino-table.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/Image/casino-table.jpg"
     },
     {
       "Identity": "/Users/muqtarhaji/Documents/Capstone/thesafebet/wwwroot/js/site.js",

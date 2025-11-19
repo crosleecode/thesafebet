@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets/SafeBet.bundle.scp.css"
     },
     {
+      "Id": "/Users/muqtarhaji/Documents/Capstone/thesafebet/wwwroot/Image/casino-table.jpg",
+      "PackagePath": "staticwebassets/Image/casino-table.jpg"
+    },
+    {
       "Id": "/Users/muqtarhaji/Documents/Capstone/thesafebet/wwwroot/css/site.css",
       "PackagePath": "staticwebassets/css/site.css"
     },

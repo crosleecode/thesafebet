@@ -3,119 +3,44 @@
 }
 
 <style>
-  body { background:#003B2F; color:#F1F3F2; }
-
-  .bg-dark-green { background:#00291F; }
-
-  .hero {
-    background: radial-gradient(70% 120% at 50% 0%, #0f5a3b 0%, #003B2F 60%);
-    color:#F8FAF9;
-  }
-
-  .card {
-    background:#F8FAF9;
-    color:#0b1f17;
-    box-shadow:0 4px 12px rgba(0,0,0,.25);
-    border-radius:12px;
-  }
-
-  .text-muted { color:#5c6b68 !important; }
-
-  /* Make section titles visible */
-  .card h2.h4 {
-    color:#003B2F;         /* Dark green-blue for contrast */
-    font-weight:700;       /* Bold for clarity */
-  }
-
-  /* Buttons */
-  .btn-primary {
-    background:#0056D2;
-    border-color:#0056D2;
-    color:white;
-  }
-  .btn-primary:hover {
-    background:#338AFF;
-    border-color:#338AFF;
-  }
-
-  .btn-success {
-    background:#15803d;
-    border-color:#15803d;
-    color:white;
-  }
-  .btn-success:hover {
-    background:#22c55e;
-    border-color:#22c55e;
-  }
-
-  .btn-outline-success {
-    color:#15803d;
-    border-color:#15803d;
-    background:transparent;
-  }
-  .btn-outline-success:hover {
-    color:white;
-    background:#15803d;
-    border-color:#15803d;
+  body {
+    background: none !important;
   }
 </style>
 
-<!-- HERO -->
-<section class="hero py-5 border-bottom">
-  <div class="container text-center">
-    <h1 class="display-5 fw-semibold mb-2">Welcome to SafeBet</h1>
-    <p class="lead opacity-75 mb-0">Your practice arena for casino strategies — no real money, just learning.</p>
-  </div>
+<section class="py-5 text-center" style="padding-top: 4rem;">
+    <h1 class="display-5 fw-semibold mb-2" style="color:white;">Welcome to SafeBet</h1>
+    <p class="lead mb-0" style="color:white; opacity:0.9;">
+        Your practice arena for casino strategies — no real money, just learning.
+    </p>
 </section>
 
-<!-- CARDS -->
-<div class="container py-5">
-  <div class="row g-4">
+<div class="container py-4">
+    <div class="row g-4">
 
-    <!-- Blackjack -->
-    <div class="col-12 col-md-6">
-      <div class="card h-100 shadow-sm border-0">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center">
-            <h2 class="h4 mb-0">Blackjack</h2>
-            <span class="badge rounded-pill text-bg-success"
-                  data-bs-toggle="tooltip"
-                  title="Goal: get close to 21 without busting. Dealer hits until 17.">i</span>
-          </div>
-          <p class="text-muted mt-2">Deal, Hit, Stand. Later: ask the ML model for a hint.</p>
-          <div class="d-flex gap-2">
-            <a asp-controller="Blackjack" asp-action="Index" class="btn btn-primary">Play Blackjack</a>
-            <a asp-controller="Home" asp-action="BlackjackRules" class="btn btn-outline-success">Rules</a>
-          </div>
+        <div class="col-12 col-md-6">
+            <div class="card-overlay">
+                <h2 class="h4 mb-1">Blackjack</h2>
+                <p class="mb-3">Deal, Hit, Stand. Later: ask the ML model for a hint.</p>
+
+                <div class="d-flex gap-2">
+                    <a asp-controller="Blackjack" asp-action="Index" class="btn btn-primary">Play Blackjack</a>
+                    <a asp-controller="Home" asp-action="BlackjackRules" class="btn btn-outline-success">Rules</a>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Roulette -->
-    <div class="col-12 col-md-6">
-      <div class="card h-100 shadow-sm border-0">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center">
-            <h2 class="h4 mb-0">Roulette</h2>
-            <span class="badge rounded-pill text-bg-success"
-                  data-bs-toggle="tooltip"
-                  title="Single-zero wheel (0–36). Even-money & straight bets.">i</span>
-          </div>
-          <p class="text-muted mt-2">Interactive grid with random spin results. Hover for odds.</p>
-          <div class="d-flex gap-2">
-            <a asp-controller="Roulette" asp-action="Index" class="btn btn-success">Play Roulette</a>
-            <a asp-controller="Home" asp-action="RouletteRules" class="btn btn-outline-success">Odds</a>
-          </div>
+        <div class="col-12 col-md-6">
+            <div class="card-overlay">
+                <h2 class="h4 mb-1">Roulette</h2>
+                <p class="mb-3">Interactive grid with random spin results. Hover for odds.</p>
+
+                <div class="d-flex gap-2">
+                    <a asp-controller="Roulette" asp-action="Index" class="btn btn-success">Play Roulette</a>
+                    <a asp-controller="Home" asp-action="RouletteRules" class="btn btn-outline-success">Odds</a>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-  </div>
+    </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const els = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  els.forEach(el => { if (window.bootstrap?.Tooltip) new bootstrap.Tooltip(el); });
-});
-</script>
