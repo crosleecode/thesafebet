@@ -11,6 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>TheSafeAdvisor</Name>
     <RootNamespace>TheSafeAdvisor</RootNamespace>
+    <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
