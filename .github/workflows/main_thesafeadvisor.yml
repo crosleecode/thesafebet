@@ -39,8 +39,9 @@ jobs:
         with:
           name: python-app
           path: |
-            PythonAPI/TheSafeAdvisor                    
-            !PythonAPI/TheSafeAdvisor/antenv/  
+            .
+            !antenv/
+        working-directory: PythonAPI/TheSafeAdvisor 
 
       # 🚫 Opting Out of Oryx Build
       # If you prefer to disable the Oryx build process during deployment, follow these steps:
@@ -77,3 +78,4 @@ jobs:
           package: python-app
 
           
+
