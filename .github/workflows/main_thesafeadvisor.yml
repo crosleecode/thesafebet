@@ -75,7 +75,9 @@ jobs:
         with:
           app-name: 'TheSafeAdvisor'
           slot-name: 'Production'
-          package: python-app
+          package: .
+        working-directory: python-app
 
           
+
 
