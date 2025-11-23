@@ -4,10 +4,23 @@ using System.Security.Cryptography;
 
 namespace SafeBet.Controllers;
 
+/// <summary>
+/// Controller for Roulette game functionality.
+/// Handles game state, bet placement, spinning, and game history.
+/// </summary>
 public class RouletteController : Controller
 {
+    // ========== FIELDS ==========
+    
+    /// <summary>Static game instance shared across all requests</summary>
     private static readonly RouletteGame _game = new();
 
+    // ========== ACTION METHODS ==========
+    
+    /// <summary>
+    /// Displays the main Roulette game page
+    /// </summary>
+    /// <returns>Roulette Index view with game state</returns>
     public IActionResult Index()
     {
         var viewModel = new RouletteViewModel
@@ -18,6 +31,12 @@ public class RouletteController : Controller
         return View(viewModel);
     }
 
+    /// <summary>
+    /// Handles bet placement from the user
+    /// </summary>
+    /// <param name="betType">Type of bet to place</param>
+    /// <param name="betAmount">Amount to bet</param>
+    /// <returns>Redirects to Index or returns error</returns>
     [HttpPost]
     public IActionResult PlaceBet(string betType, int betAmount)
     {
@@ -35,6 +54,10 @@ public class RouletteController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    /// <summary>
+    /// Executes a game spin, generates random result, calculates winnings
+    /// </summary>
+    /// <returns>JSON response for AJAX or redirect for form submission</returns>
     [HttpPost]
     public IActionResult Spin()
     {
@@ -128,6 +151,10 @@ public class RouletteController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    /// <summary>
+    /// Clears all current bets from the game
+    /// </summary>
+    /// <returns>Redirects to Index</returns>
     [HttpPost]
     public IActionResult ClearBets()
     {
@@ -137,6 +164,10 @@ public class RouletteController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    /// <summary>
+    /// Toggles the display of odds on the betting table
+    /// </summary>
+    /// <returns>Redirects to Index</returns>
     [HttpPost]
     public IActionResult ToggleOdds()
     {
