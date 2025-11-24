@@ -1292,35 +1292,35 @@ body .container main[role="main"] {
 }
 
 .zero-row .number-chip {
-    width: 58px;
-    height: 42px;
+    width: 72px;
+    height: 52px;
 }
 
 .numbers-grid {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
     width: 100%;
     justify-content: center;
     align-items: center;
     flex: 1;
-    padding: 10px 0;
+    padding: 12px 0;
 }
 
 .number-row {
     display: flex;
     flex-direction: row;
-    gap: 4px;
-    justify-content: center;
+    gap: 5px;
+    justify-content: space-evenly;
     align-items: center;
     width: 100%;
 }
 
 /* Number Chips - Rounded Rectangle Style */
 .number-chip {
-    width: 58px;
-    height: 42px;
-    border-radius: 6px;
+    width: 72px;
+    height: 52px;
+    border-radius: 8px;
     border: 2px solid #ffffff;
     display: flex;
     align-items: center;
@@ -1331,7 +1331,7 @@ body .container main[role="main"] {
     flex-shrink: 0;
     position: relative;
     font-weight: bold;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     color: white;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
 }
@@ -1730,15 +1730,15 @@ body .container main[role="main"] {
     }
     
     .number-chip {
-        width: 50px;
-        height: 38px;
-        border-radius: 5px;
-        font-size: 0.85rem;
+        width: 60px;
+        height: 44px;
+        border-radius: 6px;
+        font-size: 1rem;
     }
     
     .zero-row .number-chip {
-        width: 50px;
-        height: 38px;
+        width: 60px;
+        height: 44px;
     }
     
     .chip-number {
