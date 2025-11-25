@@ -92,3 +92,34 @@ h1, h2, h3 {
 .card-overlay .btn {
     box-shadow: 0 3px 8px rgba(0,0,0,0.4);
 }
+.back-home-btn {
+    color: #cce6ff; /* light blue so it’s visible */
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.back-home-btn:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.back-home-btn:active {
+    color: #d0eaff;
+}
+
+.back-home-btn {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+footer {
+    position: relative;
+    z-index: 0; /* ensures it stays behind content */
+}
+
+.back-home-btn {
+    position: relative;
+    z-index: 2 !important; /* place link above footer */
+    pointer-events: auto !important;
+}
+
