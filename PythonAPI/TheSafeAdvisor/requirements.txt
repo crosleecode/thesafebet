@@ -1,4 +1,5 @@
 fastapi
-uvicorn[standard]
+uvicorn
+gunicorn
 pydantic
 starlette

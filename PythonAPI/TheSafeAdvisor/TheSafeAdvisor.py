@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 import random
 import math
+import pickle
 
 ACTIONS = ["Hit", "Stand"]
 
@@ -167,9 +168,14 @@ Q_GLOBAL = None
 
 @app.on_event("startup")
 def startup():
+    #global Q_GLOBAL
+    #random.seed(0)
+    #Q_GLOBAL = trainQ(rounds=1000000)
+
     global Q_GLOBAL
     random.seed(0)
-    Q_GLOBAL = trainQ(rounds=1000000)
+    with open("q_table.pkl", "rb") as f:
+        Q_GLOBAL = pickle.load(f)
 
 @app.get("/health")
 def health():
@@ -191,11 +197,17 @@ if __name__ == "__main__":
     random.seed(0)
     Q = trainQ(rounds=1000000)
 
-    checks = [(12,0,2),(12,0,7),(16,0,10),(18,1,6),(13,0,6),(11,0,10),(20,1,5)]
-    for i in checks:
-        print(i, "->", Q[i], "best:", best_action(Q, i))
+    with open("q_table.pkl", "wb") as f:
+        pickle.dump(Q, f)
 
-    evalRandom()
-    evalPolicy(Q)
+    print("Q-table with ", len(Q), " states")
+
+    #checks = [(12,0,2),(12,0,7),(16,0,10),(18,1,6),(13,0,6),(11,0,10),(20,1,5)]
+    #for i in checks:
+    #    print(i, "->", Q[i], "best:", best_action(Q, i))
+
+    #evalRandom()
+    #evalPolicy(Q)
 
 print("FastAPI app initialized successfully")
+

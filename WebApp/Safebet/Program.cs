@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient<SafeBet.Services.SafeAdvisorService>(c =>
 {
-    c.BaseAddress = new Uri("http://127.0.0.1:8000");
+    c.BaseAddress = new Uri("https://thesafeadvisor-e3bbcuacdfg7geb8.canadacentral-01.azurewebsites.net");
 });
 
 builder.Services.AddDbContext<SafeBetContext>(options =>
