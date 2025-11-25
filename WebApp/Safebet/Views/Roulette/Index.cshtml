@@ -1,0 +1,414 @@
+@model SafeBet.Models.RouletteViewModel
+@{
+    ViewData["Title"] = "Roulette";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/roulette.css" asp-append-version="true" />
+}
+
+<div class="roulette-container">
+    <div class="container-fluid">
+        <!-- Header -->
+        <header class="roulette-header">
+            <h1 class="roulette-title">🎰 ROULETTE 🎰</h1>
+        </header>
+
+        <!-- Alert Messages -->
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-@(TempData["MessageType"]) alert-dismissible fade show roulette-alert" role="alert">
+                @TempData["Message"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <!-- Game Status Section -->
+        <section class="roulette-status-section">
+            <div class="row g-2">
+                <div class="col-md-6">
+                    <div class="status-card">
+                        <h5 class="status-title">Game Status</h5>
+                        @if (Model.Game.LastResult.HasValue)
+                        {
+                            <div class="status-content">
+                                <div class="last-result">
+                                    <span class="label">Last Result:</span>
+                                    <span class="result-number @(Model.Game.LastColor == "red" ? "red-number" : Model.Game.LastColor == "black" ? "black-number" : "green-number")">
+                                        @Model.Game.LastResult
+                                    </span>
+                                    <span class="result-color">(@Model.Game.LastColor)</span>
+                                </div>
+                                <div class="winnings">
+                                    <span class="label">Total Winnings:</span>
+                                    <span class="@(Model.Game.TotalWinnings > 0 ? "text-success" : Model.Game.TotalWinnings < 0 ? "text-danger" : "text-muted")">
+                                        $@Model.Game.TotalWinnings
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="status-content">No games played yet.</p>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="status-card">
+                        <h5 class="status-title">Current Bets</h5>
+                        @if (Model.Game.CurrentBets.Any())
+                        {
+                            <div class="status-content">
+                                <div class="total-bet">
+                                    <span class="label">Total Bet:</span>
+                                    <span class="amount">$@Model.Game.GetTotalBetAmount()</span>
+                                </div>
+                                <div class="bets-list">
+                                    @foreach (var bet in Model.Game.CurrentBets)
+                                    {
+                                        <span class="bet-badge">@bet.BetType: $@bet.Amount</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="status-content">No bets placed.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wheel and Controls Section -->
+        <section class="roulette-game-section">
+            <!-- Betting Controls -->
+            <div class="roulette-controls-section">
+                <div class="controls-card">
+                    <h5 class="controls-title">Betting Controls</h5>
+                    <div class="controls-content">
+                        <form asp-action="PlaceBet" method="post" class="bet-form">
+                            <div class="bet-input-group">
+                                <label for="betAmount">Bet Amount:</label>
+                                <input type="number" name="betAmount" id="betAmount" value="@Model.BetAmount" min="1" class="form-control bet-input" placeholder="Amount" required>
+                                <input type="hidden" name="betType" id="selectedBetType" value="" required>
+                                <button type="submit" class="btn btn-primary bet-btn" onclick="return validateBet()">Place Bet</button>
+                            </div>
+                            <small class="bet-hint">Click on a number or betting area first</small>
+                        </form>
+                        <div class="action-buttons">
+                            <form asp-action="Spin" method="post" id="spinForm">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-success btn-lg spin-btn" id="spinButton">
+                                    <span class="spin-text">SPIN</span>
+                                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                </button>
+                            </form>
+                            <form asp-action="ClearBets" method="post">
+                                <button type="submit" class="btn btn-warning action-btn">Clear Bets</button>
+                            </form>
+                            <form asp-action="ToggleOdds" method="post">
+                                <button type="submit" class="btn btn-info action-btn">
+                                    @(Model.Game.ShowOdds ? "Hide" : "Show") Odds
+                                </button>
+                            </form>
+                            <button type="button" class="btn btn-secondary action-btn" id="resetWheelBtn" onclick="resetWheel()">Reset Wheel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Roulette Wheel - Below Controls -->
+                <div class="roulette-wheel-section-compact">
+                    <div class="wheel-container-compact">
+                        <div class="wheel-container-compact-inner">
+                            <h3 class="wheel-title-compact">Roulette Wheel</h3>
+                            <div class="wheel-wrapper-compact">
+                            <div class="wheel-stand-compact"></div>
+                            <div class="wheel-outer-compact">
+                                <div class="wheel-compact" id="rouletteWheel">
+                                    <!-- Wheel will be generated by JavaScript -->
+                                </div>
+                                <div class="wheel-center-compact">
+                                    <img src="@Url.Content("~/images/11792-logo-2c795213-9c33-46f3-80f5-c79c71e28df2-safe bet.png")" alt="SafeBet" class="wheel-logo-img-compact" />
+                                </div>
+                                <div class="ball-track-compact">
+                                </div>
+                            </div>
+                            <!-- Static deflector -->
+                            <div class="deflector-compact"></div>
+                            <div class="result-display-compact" id="resultDisplay">
+                                <div class="result-number-display-compact" id="resultNumberDisplay">
+                                    @if (Model.Game.LastResult.HasValue)
+                                    {
+                                        <span class="@(Model.Game.LastColor == "red" ? "red-number" : Model.Game.LastColor == "black" ? "black-number" : "green-number")">
+                                            @Model.Game.LastResult
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </div>
+                                <div class="result-label-compact">WINNING NUMBER</div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Betting Table Section -->
+        <section class="roulette-table-section">
+            <div class="roulette-table-felt">
+                <div class="table-wood-border">
+                    <div class="table-inner">
+                        <!-- Outside Bets - Left Side -->
+                        <div class="outside-bets-left">
+                            <button class="outside-bet-btn" data-bet="1to18" onclick="selectBet('1to18')">
+                                <div class="outside-bet-label">1 to 18</div>
+                                @if (Model.Game.ShowOdds) { <div class="outside-bet-odds">1:1</div> }
+                            </button>
+                            <button class="outside-bet-btn" data-bet="even" onclick="selectBet('even')">
+                                <div class="outside-bet-label">EVEN</div>
+                                @if (Model.Game.ShowOdds) { <div class="outside-bet-odds">1:1</div> }
+                            </button>
+                            <button class="outside-bet-btn red-diamond" data-bet="red" onclick="selectBet('red')">
+                                <div class="diamond-symbol">◆</div>
+                                @if (Model.Game.ShowOdds) { <div class="outside-bet-odds">1:1</div> }
+                            </button>
+                            <button class="outside-bet-btn black-diamond" data-bet="black" onclick="selectBet('black')">
+                                <div class="diamond-symbol">◆</div>
+                                @if (Model.Game.ShowOdds) { <div class="outside-bet-odds">1:1</div> }
+                            </button>
+                            <button class="outside-bet-btn" data-bet="odd" onclick="selectBet('odd')">
+                                <div class="outside-bet-label">ODD</div>
+                                @if (Model.Game.ShowOdds) { <div class="outside-bet-odds">1:1</div> }
+                            </button>
+                            <button class="outside-bet-btn" data-bet="19to36" onclick="selectBet('19to36')">
+                                <div class="outside-bet-label">19 to 36</div>
+                                @if (Model.Game.ShowOdds) { <div class="outside-bet-odds">1:1</div> }
+                            </button>
+                        </div>
+
+                        <!-- Main Betting Area -->
+                        <div class="main-betting-area">
+                            <!-- Zero Row -->
+                            <div class="zero-row">
+                                @{
+                                    string winningZeroClass = (Model.Game.LastResult.HasValue && Model.Game.LastResult.Value == 0) ? "winning-button" : "";
+                                    string winningDoubleZeroClass = (Model.Game.LastResult.HasValue && Model.Game.LastResult.Value == 00) ? "winning-button" : "";
+                                }
+                                <button class="number-chip green-chip @winningZeroClass" data-bet="0" onclick="selectBet('0')">
+                                    <span class="chip-number">0</span>
+                                </button>
+                                <button class="number-chip green-chip @winningDoubleZeroClass" data-bet="00" onclick="selectBet('00')">
+                                    <span class="chip-number">00</span>
+                                </button>
+                            </div>
+
+                            <!-- Numbers Grid 1-36 - Horizontal Layout (3 rows, 12 columns) -->
+                            <div class="numbers-grid">
+                                @for (int row = 0; row < 3; row++)
+                                {
+                                    <div class="number-row">
+                                        @for (int col = 0; col < 12; col++)
+                                        {
+                                            int number = (row * 12) + col + 1;
+                                            bool isRed = new[]{1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36}.Contains(number);
+                                            string chipClass = isRed ? "red-chip" : "black-chip";
+                                            string winningButtonClass = (Model.Game.LastResult.HasValue && Model.Game.LastResult.Value == number) ? "winning-button" : "";
+                                            <button class="number-chip @chipClass @winningButtonClass" data-bet="@number" onclick="selectBet('@number')">
+                                                <span class="chip-number">@number</span>
+                                            </button>
+                                        }
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Dozens Row -->
+                            <div class="dozens-row">
+                                <button class="dozen-bet" data-bet="1st12" onclick="selectBet('1st12')">
+                                    <div class="dozen-label">1st 12</div>
+                                    <div class="dozen-odds">2 TO 1</div>
+                                </button>
+                                <button class="dozen-bet" data-bet="2nd12" onclick="selectBet('2nd12')">
+                                    <div class="dozen-label">2nd 12</div>
+                                    <div class="dozen-odds">2 TO 1</div>
+                                </button>
+                                <button class="dozen-bet" data-bet="3rd12" onclick="selectBet('3rd12')">
+                                    <div class="dozen-label">3rd 12</div>
+                                    <div class="dozen-odds">2 TO 1</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Column Bets - Right Side -->
+                        <div class="column-bets-right">
+                            <button class="column-bet-btn" data-bet="col1" onclick="selectBet('col1')">
+                                <div class="column-label">2 TO 1</div>
+                            </button>
+                            <button class="column-bet-btn" data-bet="col2" onclick="selectBet('col2')">
+                                <div class="column-label">2 TO 1</div>
+                            </button>
+                            <button class="column-bet-btn" data-bet="col3" onclick="selectBet('col3')">
+                                <div class="column-label">2 TO 1</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Additional Info Sections -->
+        <section class="roulette-info-sections">
+            <div class="row g-2">
+                <!-- Recent Numbers Display -->
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <h5 class="info-title">Recent Numbers</h5>
+                        <div class="recent-numbers-display">
+                            @if (Model.Game.GameHistory.Any())
+                            {
+                                @foreach (var game in Model.Game.GameHistory.TakeLast(12).Reverse())
+                                {
+                                    <span class="recent-number @(game.Color == "red" ? "red-number" : game.Color == "black" ? "black-number" : "green-number")">
+                                        @game.Result
+                                    </span>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted">No numbers yet</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Panel -->
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <h5 class="info-title">Statistics</h5>
+                        <div class="stats-content">
+                            @{
+                                var history = Model.Game.GameHistory.ToList();
+                                var redCount = history.Count(g => g.Color == "red");
+                                var blackCount = history.Count(g => g.Color == "black");
+                                var greenCount = history.Count(g => g.Color == "green");
+                                var evenCount = history.Count(g => {
+                                    if (g.Result == 0) return false;
+                                    return g.Result % 2 == 0;
+                                });
+                                var oddCount = history.Count(g => {
+                                    if (g.Result == 0) return false;
+                                    return g.Result % 2 == 1;
+                                });
+                            }
+                            <div class="stat-item">
+                                <span class="stat-label">Red:</span>
+                                <span class="stat-value">@redCount</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Black:</span>
+                                <span class="stat-value">@blackCount</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Green:</span>
+                                <span class="stat-value">@greenCount</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Even:</span>
+                                <span class="stat-value">@evenCount</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Odd:</span>
+                                <span class="stat-value">@oddCount</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Card -->
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <h5 class="info-title">Quick Stats</h5>
+                        <div class="quick-stats-content">
+                            <div class="quick-stat-item">
+                                <span class="quick-stat-label">Total Games:</span>
+                                <span class="quick-stat-value">@Model.Game.GameHistory.Count</span>
+                            </div>
+                            <div class="quick-stat-item">
+                                <span class="quick-stat-label">Total Winnings:</span>
+                                <span class="quick-stat-value @(Model.Game.TotalWinnings > 0 ? "text-success" : Model.Game.TotalWinnings < 0 ? "text-danger" : "text-muted")">
+                                    $@Model.Game.TotalWinnings
+                                </span>
+                            </div>
+                            <div class="quick-stat-item">
+                                <span class="quick-stat-label">Current Bets:</span>
+                                <span class="quick-stat-value">@Model.Game.CurrentBets.Count</span>
+                            </div>
+                            <div class="quick-stat-item">
+                                <span class="quick-stat-label">Total Bet Amount:</span>
+                                <span class="quick-stat-value">$@Model.Game.GetTotalBetAmount()</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game History Section -->
+        @if (Model.Game.GameHistory.Any())
+        {
+            <section class="roulette-history-section">
+                <div class="history-card">
+                    <h5 class="history-title">Game History</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm history-table">
+                            <thead>
+                                <tr>
+                                    <th>Result</th>
+                                    <th>Color</th>
+                                    <th>Total Bet</th>
+                                    <th>Winnings</th>
+                                    <th>Net</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var game in Model.Game.GameHistory.TakeLast(10).Reverse())
+                                {
+                                    <tr>
+                                        <td>@game.Result</td>
+                                        <td><span class="badge bg-@(game.Color == "red" ? "danger" : game.Color == "black" ? "dark" : "success")">@game.Color.ToUpper()</span></td>
+                                        <td>$@game.TotalBet</td>
+                                        <td>$@game.Winnings</td>
+                                        <td class="@(game.NetWinnings > 0 ? "text-success" : game.NetWinnings < 0 ? "text-danger" : "text-muted")">
+                                            $@game.NetWinnings
+                                        </td>
+                                        <td>@game.Timestamp.ToString("HH:mm:ss")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/roulette.js" asp-append-version="true"></script>
+    <script>
+        // Initialize wheel with last result
+        const lastResult = @(Model.Game.LastResult.HasValue ? Model.Game.LastResult.Value : -1);
+        if (lastResult !== -1) {
+            setTimeout(() => {
+                if (typeof highlightWinningNumber === 'function') {
+                    highlightWinningNumber(lastResult);
+                }
+            }, 300);
+        }
+    </script>
+}

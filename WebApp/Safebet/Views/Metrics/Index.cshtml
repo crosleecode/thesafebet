@@ -1,0 +1,61 @@
+﻿@model SafeBet.Models.MetricsViewModel
+@{
+    ViewData["Title"] = "Player Metrics";
+}
+
+<div class="container mt-5" style="color:white;">
+
+    <h2 class="text-center mb-3">Player Metrics</h2>
+    <p class="text-center">Statistics from this session</p>
+
+    <div class="row mt-5">
+
+        <div class="col-md-4 mb-3">
+            <div class="p-3" style="background-color:#003300; border-radius:6px;">
+                <h4>Activity</h4>
+                <ul style="list-style:none; padding-left:0;">
+                    <li><b>Games played:</b> @Model.GamesPlayed</li>
+                    <li><b>Advice requests:</b> @Model.AdviceRequests</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="p-3" style="background-color:#003300; border-radius:6px;">
+                <h4>Blackjack (All)</h4>
+                <ul style="list-style:none; padding-left:0;">
+                    <li><b>Wins:</b> @Model.BlackjackWins</li>
+                    <li><b>Losses:</b> @Model.BlackjackLosses</li>
+                    <li><b>Win/Loss ratio:</b> @Model.WinLossRatioOverall</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="p-3" style="background-color:#003300; border-radius:6px;">
+                <h4>With Advice</h4>
+                <ul style="list-style:none; padding-left:0;">
+                    <li><b>Wins (advice):</b> @Model.AdvisedWins</li>
+                    <li><b>Losses (advice):</b> @Model.AdvisedLosses</li>
+                    <li><b>Win/Loss ratio (advice):</b> @Model.WinLossRatioWithAdvice</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-12 mt-3">
+            <div class="p-3" style="background-color:#003300; border-radius:6px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h4 style="margin:0;">Net Earnings</h4>
+                    <span style="font-size:1.2rem;">@Model.NetEarningsDisplay</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-light" style="border:1px solid #0e3b22; color:#0e3b22;">
+            Back to Home
+        </a>
+    </div>
+</div>
