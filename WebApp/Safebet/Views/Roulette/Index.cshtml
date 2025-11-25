@@ -207,14 +207,14 @@
                                 </button>
                             </div>
 
-                            <!-- Numbers Grid 1-36 -->
+                            <!-- Numbers Grid 1-36 - Horizontal Layout (3 rows, 12 columns) -->
                             <div class="numbers-grid">
-                                @for (int row = 0; row < 12; row++)
+                                @for (int row = 0; row < 3; row++)
                                 {
                                     <div class="number-row">
-                                        @for (int col = 0; col < 3; col++)
+                                        @for (int col = 0; col < 12; col++)
                                         {
-                                            int number = (row * 3) + col + 1;
+                                            int number = (row * 12) + col + 1;
                                             bool isRed = new[]{1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36}.Contains(number);
                                             string chipClass = isRed ? "red-chip" : "black-chip";
                                             string winningButtonClass = (Model.Game.LastResult.HasValue && Model.Game.LastResult.Value == number) ? "winning-button" : "";
@@ -254,6 +254,103 @@
                             <button class="column-bet-btn" data-bet="col3" onclick="selectBet('col3')">
                                 <div class="column-label">2 TO 1</div>
                             </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Additional Info Sections -->
+        <section class="roulette-info-sections">
+            <div class="row g-2">
+                <!-- Recent Numbers Display -->
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <h5 class="info-title">Recent Numbers</h5>
+                        <div class="recent-numbers-display">
+                            @if (Model.Game.GameHistory.Any())
+                            {
+                                @foreach (var game in Model.Game.GameHistory.TakeLast(12).Reverse())
+                                {
+                                    <span class="recent-number @(game.Color == "red" ? "red-number" : game.Color == "black" ? "black-number" : "green-number")">
+                                        @game.Result
+                                    </span>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted">No numbers yet</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Panel -->
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <h5 class="info-title">Statistics</h5>
+                        <div class="stats-content">
+                            @{
+                                var history = Model.Game.GameHistory.ToList();
+                                var redCount = history.Count(g => g.Color == "red");
+                                var blackCount = history.Count(g => g.Color == "black");
+                                var greenCount = history.Count(g => g.Color == "green");
+                                var evenCount = history.Count(g => {
+                                    if (g.Result == 0) return false;
+                                    return g.Result % 2 == 0;
+                                });
+                                var oddCount = history.Count(g => {
+                                    if (g.Result == 0) return false;
+                                    return g.Result % 2 == 1;
+                                });
+                            }
+                            <div class="stat-item">
+                                <span class="stat-label">Red:</span>
+                                <span class="stat-value">@redCount</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Black:</span>
+                                <span class="stat-value">@blackCount</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Green:</span>
+                                <span class="stat-value">@greenCount</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Even:</span>
+                                <span class="stat-value">@evenCount</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Odd:</span>
+                                <span class="stat-value">@oddCount</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Card -->
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <h5 class="info-title">Quick Stats</h5>
+                        <div class="quick-stats-content">
+                            <div class="quick-stat-item">
+                                <span class="quick-stat-label">Total Games:</span>
+                                <span class="quick-stat-value">@Model.Game.GameHistory.Count</span>
+                            </div>
+                            <div class="quick-stat-item">
+                                <span class="quick-stat-label">Total Winnings:</span>
+                                <span class="quick-stat-value @(Model.Game.TotalWinnings > 0 ? "text-success" : Model.Game.TotalWinnings < 0 ? "text-danger" : "text-muted")">
+                                    $@Model.Game.TotalWinnings
+                                </span>
+                            </div>
+                            <div class="quick-stat-item">
+                                <span class="quick-stat-label">Current Bets:</span>
+                                <span class="quick-stat-value">@Model.Game.CurrentBets.Count</span>
+                            </div>
+                            <div class="quick-stat-item">
+                                <span class="quick-stat-label">Total Bet Amount:</span>
+                                <span class="quick-stat-value">$@Model.Game.GetTotalBetAmount()</span>
+                            </div>
                         </div>
                     </div>
                 </div>
