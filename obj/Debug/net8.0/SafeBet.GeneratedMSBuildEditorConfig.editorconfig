@@ -66,6 +66,54 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/muqtarhaji/Documents/Capstone/thesafebet/WebApp/Safebet/Views/Blackjack/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViQXBwL1NhZmViZXQvVmlld3MvQmxhY2tqYWNrL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/muqtarhaji/Documents/Capstone/thesafebet/WebApp/Safebet/Views/Home/BlackjackRules.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViQXBwL1NhZmViZXQvVmlld3MvSG9tZS9CbGFja2phY2tSdWxlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/muqtarhaji/Documents/Capstone/thesafebet/WebApp/Safebet/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViQXBwL1NhZmViZXQvVmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/muqtarhaji/Documents/Capstone/thesafebet/WebApp/Safebet/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViQXBwL1NhZmViZXQvVmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/muqtarhaji/Documents/Capstone/thesafebet/WebApp/Safebet/Views/Home/RouletteRules.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViQXBwL1NhZmViZXQvVmlld3MvSG9tZS9Sb3VsZXR0ZVJ1bGVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/muqtarhaji/Documents/Capstone/thesafebet/WebApp/Safebet/Views/Metrics/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViQXBwL1NhZmViZXQvVmlld3MvTWV0cmljcy9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/muqtarhaji/Documents/Capstone/thesafebet/WebApp/Safebet/Views/Roulette/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViQXBwL1NhZmViZXQvVmlld3MvUm91bGV0dGUvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/muqtarhaji/Documents/Capstone/thesafebet/WebApp/Safebet/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViQXBwL1NhZmViZXQvVmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/muqtarhaji/Documents/Capstone/thesafebet/WebApp/Safebet/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViQXBwL1NhZmViZXQvVmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/muqtarhaji/Documents/Capstone/thesafebet/WebApp/Safebet/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViQXBwL1NhZmViZXQvVmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/muqtarhaji/Documents/Capstone/thesafebet/WebApp/Safebet/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViQXBwL1NhZmViZXQvVmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/muqtarhaji/Documents/Capstone/thesafebet/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-2smu7xknag
+
+[/Users/muqtarhaji/Documents/Capstone/thesafebet/WebApp/Safebet/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = V2ViQXBwL1NhZmViZXQvVmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-ody4lhqjq8
