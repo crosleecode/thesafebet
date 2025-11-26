@@ -3,76 +3,44 @@
 }
 
 <style>
-  .bg-dark-green{background:#0e3b22;}
-  .hero {
-    background: radial-gradient(70% 120% at 50% 0%, #184f31 0%, #0e3b22 60%);
-    color:#eaf7ef;
+  body {
+    background: none !important;
   }
 </style>
 
-<!-- HERO -->
-<section class="hero py-5 border-bottom">
-  <div class="container text-center">
-    <h1 class="display-5 fw-semibold mb-2">Welcome to TheSafeBet</h1>
-    <p class="lead opacity-75 mb-0">Your practice arena for casino strategies — no real money, just learning.</p>
-  </div>
+<section class="py-5 text-center" style="padding-top: 4rem;">
+    <h1 class="display-5 fw-semibold mb-2" style="color:white;">Welcome to SafeBet</h1>
+    <p class="lead mb-0" style="color:white; opacity:0.9;">
+        Your practice arena for casino strategies — no real money, just learning.
+    </p>
 </section>
 
-<!-- CARDS -->
-<div class="container py-5">
-  <div class="row g-4">
+<div class="container py-4">
+    <div class="row g-4">
 
-    <!-- Blackjack -->
-    <div class="col-12 col-md-6">
-      <div class="card h-100 shadow-sm border-0">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center">
-            <h2 class="h4 mb-0" style="color:#0e3b22;">Blackjack</h2>
-            <span class="badge rounded-pill text-bg-success"
-                  data-bs-toggle="tooltip"
-                  title="Goal: get close to 21 without busting. Dealer hits until 17.">i</span>
-          </div>
-          <p class="text-muted mt-2">Deal, Hit, Stand. Later: ask the ML model for a hint.</p>
-          <div class="d-flex gap-2">
-            <a asp-controller="Blackjack" asp-action="Index" class="btn btn-primary">Play Blackjack</a>
-            <a asp-controller="Home" asp-action="BlackjackRules" class="btn btn-outline-success">Rules</a>
-          </div>
+        <div class="col-12 col-md-6">
+            <div class="card-overlay">
+                <h2 class="h4 mb-1">Blackjack</h2>
+                <p class="mb-3">Deal, Hit, Stand. Later: ask the ML model for a hint.</p>
+
+                <div class="d-flex gap-2">
+                    <a asp-controller="Blackjack" asp-action="Index" class="btn btn-primary">Play Blackjack</a>
+                    <a asp-controller="Home" asp-action="BlackjackRules" class="btn btn-outline-success">Rules</a>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Roulette -->
-    <div class="col-12 col-md-6">
-      <div class="card h-100 shadow-sm border-0">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center">
-            <h2 class="h4 mb-0" style="color:#0e3b22;">Roulette</h2>
-            <span class="badge rounded-pill text-bg-success"
-                  data-bs-toggle="tooltip"
-                  title="Single-zero wheel (0–36). Even-money & straight bets.">i</span>
-          </div>
-          <p class="text-muted mt-2">Interactive grid with random spin results. Hover for odds.</p>
-          <div class="d-flex gap-2">
-            <a asp-controller="Roulette" asp-action="Index" class="btn btn-success">Play Roulette</a>
-            <a asp-controller="Home" asp-action="RouletteRules" class="btn btn-outline-success">Odds</a>
-          </div>
+        <div class="col-12 col-md-6">
+            <div class="card-overlay">
+                <h2 class="h4 mb-1">Roulette</h2>
+                <p class="mb-3">Interactive grid with random spin results. Hover for odds.</p>
+
+                <div class="d-flex gap-2">
+                    <a asp-controller="Roulette" asp-action="Index" class="btn btn-success">Play Roulette</a>
+                    <a asp-controller="Home" asp-action="RouletteRules" class="btn btn-outline-success">Odds</a>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-  </div>
+    </div>
 </div>
-
-<a asp-controller="Metrics" asp-action="Index"
-   class="btn"
-   style="background:#fff; color:#0e3b22; border:1px solid #0e3b22;">
-    View Stats
-</a>
-
-<script>
-// enable Bootstrap tooltips if bootstrap.js is loaded
-document.addEventListener('DOMContentLoaded', () => {
-  const els = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  els.forEach(el => { if (window.bootstrap?.Tooltip) new bootstrap.Tooltip(el); });
-});
-</script>
