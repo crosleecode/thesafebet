@@ -4,88 +4,132 @@
     var game = Model.Game;
 }
 
-<h2 class="sb-title">Blackjack</h2>
+<link rel="stylesheet" href="~/css/blackjack.css" />
 
-<div style="text-align:center; margin-bottom:20px;">
-    <form method="post" asp-action="NewGame" style="display:inline-block;">
-        <button class="sb-btn">New Game</button>
-    </form>
-</div>
+<div class="bj-root"
+     style="background-image:url('@Url.Content("~/images/bj_final.png")');
+            background-repeat:no-repeat;
+            background-size:cover;
+            background-position:65% top;
+            min-height:100vh;">
 
-<div class="sb-top">
-    <div class="sb-roundinfo">
-        <div>Round: @Model.roundNum</div>
-        <div>Bet: @Model.BetDisplay</div>
+    <div style="display:flex; justify-content:center; align-items:center; gap:2px; margin-bottom:0px;">
+
+        <img src="~/images/card1.png"
+             alt="cards"
+             style="height:80px; margin-right:18px;">
+
+        <h2 class="sb-title" style="margin:0;">Blackjack</h2>
+
+        <img src="~/images/f_chips.png"
+             alt="chips"
+             style="height:90px; margin-left:-12px;">
     </div>
 
-    <div class="sb-bet">
-        <form method="post" asp-action="SetBet" class="inline-block">
-            <input name="amount" type="number" min="1" step="1" placeholder="Enter bet" />
-            <button class="sb-btn sb-btn-ghost">Set Bet</button>
+    <div style="text-align:center; margin-top:14px; position:relative; left:0;">
+        <form method="post" asp-action="NewGame" style="display:inline-block;">
+            <button class="sb-btn">New Game</button>
         </form>
     </div>
+
+    <div class="sb-top">
+        <div class="sb-bet"
+             style="margin-top:-45px; position:relative; left:890px;">
+            <form method="post" asp-action="SetBet" class="inline-block">
+                <input name="amount" type="number" min="1" step="1" placeholder="Enter bet" />
+                <button class="sb-btn sb-btn-ghost">Set Bet</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="bj-area">
+        <div class="sb-table-wrap">
+            <div class="sb-table">
+
+                <div class="sb-seat sb-dealer">
+                    <h3>Dealer</h3>
+                    <div class="sb-cards">
+                        @for (int i = 0; i < game.Dealer.Cards.Count; i++)
+                        {
+                            var c = game.Dealer.Cards[i];
+                            if (!game.RoundOver && i == 1)
+                            {
+                                <span class="sb-card sb-card-hidden"></span>
+                            }
+                            else
+                            {
+                                <span class="sb-card">@RankLabel(c.Rank)@SuitChar(c.Suit)</span>
+                            }
+                        }
+                    </div>
+                    @if (game.RoundOver)
+                    {
+                        <div class="sb-total">Total: @game.Dealer.Total()</div>
+                    }
+                </div>
+
+                <div class="sb-seat sb-player">
+                    <h3>Player</h3>
+                    <div class="sb-cards">
+                        @foreach (var c in game.Player.Cards)
+                        {
+                            <span class="sb-card">@RankLabel(c.Rank)@SuitChar(c.Suit)</span>
+                        }
+                    </div>
+                    <div class="sb-total">Total: @game.Player.Total()</div>
+                </div>
+
+                <div class="sb-table-note"
+                     style="position:absolute; bottom:230px; width:100%; text-align:center;
+                            font-size:1.2rem; font-weight:500; letter-spacing:0;
+                            color:#f77367; text-shadow:0 1px 2px rgba(0,0,0,0.25);">
+                    Dealer hits on 17
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="bj-round-row">
+        <span class="bj-round-item bj-round-yellow">
+            Round: @Model.roundNum
+        </span>
+        <span class="bj-round-item bj-round-red">
+            Bet: @Model.BetDisplay
+        </span>
+    </div>
+
+    @if (!game.RoundOver)
+    {
+        <div class="sb-actions-row">
+            <form method="post" asp-action="Hit">
+                <button class="sb-btn">Hit</button>
+            </form>
+            <form method="post" asp-action="Stand">
+                <button class="sb-btn">Stand</button>
+            </form>
+            <form method="post" asp-action="AskAdvice">
+                <button class="sb-btn sb-btn-ghost">Ask Advice</button>
+            </form>
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.Advice))
+    {
+        <div style="text-align:center; margin-top:20px; color:white;">
+            <h3>Advice: @Model.Advice</h3>
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.ResultText))
+    {
+        <div class="sb-result">
+            <h3>@Model.ResultText</h3>
+        </div>
+    }
+
 </div>
 
-<div class="sb-table-wrap">
-    <div class="sb-table">
-
-        <div class="sb-seat sb-dealer">
-            <h3>Dealer</h3>
-            <div class="sb-cards">
-                @for (int i = 0; i < game.Dealer.Cards.Count; i++)
-                {
-                    var c = game.Dealer.Cards[i];
-                    if (!game.RoundOver && i == 1)
-                    {
-                        <span class="sb-card sb-card-hidden"></span>
-                    }
-                    else
-                    {
-
-                        <span class="sb-card">@RankLabel(c.Rank)@SuitChar(c.Suit)</span>
-                    }
-                }
-            </div>
-            @if (game.RoundOver)
-            {
-                <div class="sb-total">Total: @game.Dealer.Total()</div>
-            }
-        </div>
-
-        <div class="sb-seat sb-player">
-            <h3>Player</h3>
-            <div class="sb-cards">
-                @foreach (var c in game.Player.Cards)
-                {
-                    <span class="sb-card">@RankLabel(c.Rank)@SuitChar(c.Suit)</span>
-                }
-            </div>
-            <div class="sb-total">Total: @game.Player.Total()</div>
-        </div>
-
-    </div>
-</div>
-
-@if (!game.RoundOver)
-{
-    <div class="sb-actions-row">
-        <form method="post" asp-action="Hit"><button class="sb-btn">Hit</button></form>
-        <form method="post" asp-action="Stand"><button class="sb-btn">Stand</button></form>
-        <form method="post" asp-action="AskAdvice"><button class="sb-btn sb-btn-ghost">Ask Advice</button></form>
-    </div>
-}
-
-@if (!string.IsNullOrWhiteSpace(Model.Advice))
-{
-    <div style="text-align:center; margin-top:20px; color:white;">
-        <h3>Advice: @Model.Advice</h3>
-    </div>
-}
-
-@if (!string.IsNullOrWhiteSpace(Model.ResultText))
-{
-    <div class="sb-result"><h3>@Model.ResultText</h3></div>
-}
 
 @functions {
     private string SuitChar(SafeBet.Models.Suit s) => s switch
