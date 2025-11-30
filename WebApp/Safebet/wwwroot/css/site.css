@@ -114,11 +114,43 @@ h1, h2, h3 {
 }
 footer {
     position: relative;
-    z-index: 0; /* ensures it stays behind content */
+    z-index: 0;
 }
 
 .back-home-btn {
     position: relative;
-    z-index: 2 !important; /* place link above footer */
+    z-index: 2 !important;
     pointer-events: auto !important;
 }
+
+.sb-login-btn {
+    background-color: #ffffff;
+    color: #1a8736;
+    border: 2px solid #ffffff;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+    .sb-login-btn:hover {
+        background-color: transparent;
+        color: #1a8736;
+        border-color: #1a8736;
+        text-decoration: none;
+    }
+
+.sb-logout-btn {
+    background-color: transparent;
+    color: #1a8736;
+    border: 2px solid #ffffff;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-weight: 600;
+}
+
+    .sb-logout-btn:hover {
+        background-color: #ffffff;
+        color: #1a8736;
+        text-decoration: none;
+    }

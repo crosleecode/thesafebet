@@ -9,8 +9,9 @@ namespace SafeBet.Models
     public class Metrics
     {
         [Key]
-        [Column("CookieId")]
-        public string CookieId { get; set; } = string.Empty;
+        [ForeignKey(nameof(User))]
+        [Column("UserId")]
+        public int UserId { get; set; }
 
         [Column("GamesPlayed")]
         public int GamesPlayed { get; set; }
@@ -30,11 +31,14 @@ namespace SafeBet.Models
         [Column("AdvisedLosses")]
         public int AdvisedLosses { get; set; }
 
-        [Column("NetEarnings", TypeName = "decimal(12,2)")]
+        [Column("NetEarnings", TypeName = "decimal(18,2)")]
         public decimal NetEarnings { get; set; }
 
         [Column("UpdatedTime")]
         public DateTime UpdatedTime { get; set; }
+
+        
+        public User User { get; set; } = null!;
 
     }
 }
