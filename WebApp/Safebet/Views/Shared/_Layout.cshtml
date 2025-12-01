@@ -36,7 +36,6 @@
                     </ul>
 
                     <ul class="navbar-nav ms-auto">
-
                         @if (User.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item d-flex align-items-center me-3">
@@ -44,20 +43,18 @@
                                     Hello, @User.Identity.Name
                                 </span>
                             </li>
-
                             <li class="nav-item">
                                 <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                    <button type="submit" class="btn sb-logout-btn">Logout</button>
+                                    <button type="submit" class="btn sb-auth-btn">Logout</button>
                                 </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a asp-controller="Account" asp-action="Login" class="btn sb-login-btn">Login</a>
+                                <a asp-controller="Account" asp-action="Login" class="btn sb-auth-btn">Login</a>
                             </li>
                         }
-
                     </ul>
                 </div>
             </div>
@@ -69,12 +66,6 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-                © 2025 – SafeBet
-        </div>
-</footer>
 
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

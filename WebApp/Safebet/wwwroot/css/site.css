@@ -123,9 +123,9 @@ footer {
     pointer-events: auto !important;
 }
 
-.sb-login-btn {
+.sb-auth-btn {
     background-color: #ffffff;
-    color: #1a8736;
+    color: var(--sb-bg);
     border: 2px solid #ffffff;
     border-radius: 20px;
     padding: 4px 14px;
@@ -133,24 +133,10 @@ footer {
     text-decoration: none;
 }
 
-    .sb-login-btn:hover {
-        background-color: transparent;
-        color: #1a8736;
-        border-color: #1a8736;
-        text-decoration: none;
-    }
-
-.sb-logout-btn {
-    background-color: transparent;
-    color: #1a8736;
-    border: 2px solid #ffffff;
-    border-radius: 20px;
-    padding: 4px 14px;
-    font-weight: 600;
+.sb-auth-btn:hover,
+.sb-auth-btn:focus {
+    background-color: var(--sb-bg);
+    color: #ffffff;
+    border-color: #ffffff;
+    text-decoration: none;
 }
-
-    .sb-logout-btn:hover {
-        background-color: #ffffff;
-        color: #1a8736;
-        text-decoration: none;
-    }
