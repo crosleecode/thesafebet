@@ -12,17 +12,10 @@
 
 </head>
 
-@{
-        var controller = ViewContext.RouteData.Values["controller"]?.ToString();
-        var action = ViewContext.RouteData.Values["action"]?.ToString();
-
-        var bodyClass =
-                controller == "Home" && action == "Index" ? "home-bg" :
-                controller == "Blackjack" ? "bj-page" :
-                "";
-}
-
-<body class="@bodyClass">
+<body class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home"
+                     && ViewContext.RouteData.Values["action"]?.ToString() == "Index"
+                     ? "home-bg"
+                     : "")">
 
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">

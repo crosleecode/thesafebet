@@ -19,20 +19,6 @@ body.home-bg {
   color: var(--sb-text);
 }
 
-body.bj-page {
-    background: none !important;
-    color: var(--sb-text);
-}
-
-    body.bj-page .container {
-        max-width: 100%;
-        padding: 0;
-    }
-
-    body.bj-page main {
-        padding-bottom: 0;
-    }
-
 h1, h2, h3 { 
   color:#d5e8d4; 
 }
