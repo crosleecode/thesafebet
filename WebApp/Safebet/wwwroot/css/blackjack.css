@@ -77,6 +77,10 @@
     position: relative;
 }
 
+.bj-area {
+    position: relative;
+}
+
 .bj-root {
     position: relative;
     max-width: 100%;
@@ -91,9 +95,6 @@
     background-attachment: fixed;
 }
 
-.bj-area {
-    position: relative;
-}
 
 body {
     overflow-x: hidden;
