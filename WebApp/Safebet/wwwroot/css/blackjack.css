@@ -84,16 +84,15 @@
     min-height: 100vh;
     padding-top: 4px;
     padding-bottom: 0;
+    background-image: url('/images/bj_final.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 65% top;
+    background-attachment: fixed;
 }
 
 .bj-area {
     position: relative;
-}
-
-.bj-root {
-    min-height: auto !important;
-    height: auto !important;
-    overflow: hidden !important;
 }
 
 body {
