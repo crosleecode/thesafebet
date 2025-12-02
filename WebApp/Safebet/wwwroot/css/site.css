@@ -28,8 +28,9 @@ h1, h2, h3 {
 }
 
 .navbar .nav-link,
-.navbar .navbar-brand {
-  color:#ffffff !important;
+.navbar .navbar-brand,
+.navbar .navbar-text {
+    color: #ffffff !important;
 }
 
 .card-overlay {
