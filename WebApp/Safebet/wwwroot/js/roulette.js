@@ -104,9 +104,17 @@ function createWheel() {
     const wheel = document.getElementById('rouletteWheel');
     if (!wheel) return;
     
-    // Clear existing wheel numbers
-    const existingNumbers = wheel.querySelectorAll('.wheel-number');
-    existingNumbers.forEach(el => el.remove());
+    // Clear existing wheel numbers completely
+    wheel.innerHTML = '';
+    
+    // Also clear any duplicate wheels
+    const allWheels = document.querySelectorAll('#rouletteWheel');
+    if (allWheels.length > 1) {
+        console.warn('Multiple roulette wheels detected, keeping only the first');
+        for (let i = 1; i < allWheels.length; i++) {
+            allWheels[i].remove();
+        }
+    }
     
     const totalNumbers = wheelNumbers.length;
     const angleStep = 360 / totalNumbers;
