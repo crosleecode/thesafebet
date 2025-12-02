@@ -145,3 +145,26 @@ footer {
     border-color: #ffffff;
     text-decoration: none;
 }
+
+.auth-container {
+    max-width: 360px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.auth-container .form-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0;
+}
+
+.auth-container .form-group label {
+    margin-right: 10px;
+    font-weight: 600;
+}
+
+.auth-container .form-control {
+    max-width: 180px;
+    text-align: center;
+}
