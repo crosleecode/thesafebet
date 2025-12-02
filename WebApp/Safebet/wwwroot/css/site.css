@@ -48,6 +48,12 @@ h1, h2, h3 {
 .sb-input{ background:#aa6151; color:#111; border:1px solid #a5d6a7; border-radius:6px; padding:.4rem .6rem; width:120px; }
 .sb-bet-note{ opacity:.9; font-size:.95rem; }
 
+.sb-home-title,
+.sb-home-sub {
+    color: #ffffff;
+    text-shadow: 0 0 6px rgba(0,0,0,0.85), 0 2px 4px rgba(0,0,0,0.85), 0 0 12px rgba(0,0,0,0.9);
+}
+
 .sb-table-wrap{ display:flex; justify-content:center; }
 .sb-table{
   width:min(760px,94vw); height:260px; margin:.25rem auto 0; padding:1.1rem 1.6rem 1.1rem 2.4rem;
@@ -66,34 +72,32 @@ h1, h2, h3 {
 .sb-btn{ background:var(--sb-primary); color:#fff; border:none; padding:.55rem 1rem; border-radius:999px; font-weight:600; cursor:pointer; }
 .sb-btn-ghost{ background:transparent; border:2px solid var(--sb-primary); color:#d5e8d4; }
 .sb-btn:hover{ filter:brightness(1.1); }
-/* Strong readable card boxes */
+
+
 .card-overlay {
-    background: rgba(0, 0, 0, 0.55);       /* darker background */
-    color: #fff;                           /* bright white text */
-    backdrop-filter: blur(6px);            /* smooth glass effect */
+    background: rgba(0, 0, 0, 0.55);     
+    color: #fff;                          
+    backdrop-filter: blur(6px);            
     padding: 1.75rem;
     border-radius: 18px;
     border: 1px solid rgba(255,255,255,0.25);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.4); /* stronger shadow */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
 }
 
-/* Make headings stand out */
 .card-overlay h2 {
     color: #ffffff !important;
     font-weight: 700;
 }
 
-/* Make paragraph text readable */
 .card-overlay p {
     color: #e9e9e9;
 }
 
-/* Adjust buttons contrast */
 .card-overlay .btn {
     box-shadow: 0 3px 8px rgba(0,0,0,0.4);
 }
 .back-home-btn {
-    color: #cce6ff; /* light blue so it’s visible */
+    color: #cce6ff;
     text-decoration: none;
     font-size: 1.1rem;
     font-weight: 500;
