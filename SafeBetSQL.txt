@@ -1,0 +1,22 @@
+-- Users Table
+CREATE TABLE [dbo].[Users] (
+    [UserId]       INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [Username]     NVARCHAR(50)      NOT NULL UNIQUE,
+    [PasswordHash] NVARCHAR(200)     NOT NULL,
+    [CreatedAt]    DATETIME2         NOT NULL DEFAULT SYSUTCDATETIME()
+);
+
+-- User Metrics Table
+CREATE TABLE [dbo].[UserMetrics] (
+    [UserId]          INT             NOT NULL PRIMARY KEY,
+    [GamesPlayed]     INT             NOT NULL DEFAULT 0,
+    [AdviceRequests]  INT             NOT NULL DEFAULT 0,
+    [BlackjackWins]   INT             NOT NULL DEFAULT 0,
+    [BlackjackLosses] INT             NOT NULL DEFAULT 0,
+    [AdvisedWins]     INT             NOT NULL DEFAULT 0,
+    [AdvisedLosses]   INT             NOT NULL DEFAULT 0,
+    [NetEarnings]     DECIMAL(18,2)   NOT NULL DEFAULT 0,
+    [UpdatedTime]     DATETIME2       NOT NULL DEFAULT SYSUTCDATETIME(),
+    CONSTRAINT [FK_UserMetrics_Users]
+        FOREIGN KEY ([UserId]) REFERENCES [dbo].[Users]([UserId])
+);
